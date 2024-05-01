@@ -1,0 +1,11 @@
+{
+  "language": "Language",
+  "button": {
+    "sign-in": "Sign In",
+    "sign-up": "Sign Up"
+  },
+  "landing": {
+    "section-1": "Buy, rent, or sell your property easily",
+    "section-2": "A great platform to buy, sell, or even rent your properties without any commisions."
+  }
+}
