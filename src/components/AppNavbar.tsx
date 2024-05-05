@@ -1,4 +1,6 @@
+import { axiosInstance } from "@/api/utils";
 import { memberAtom } from "@/app";
+import { MemberResDto } from "@/types";
 import {
   Avatar,
   Button,
@@ -10,14 +12,20 @@ import {
   PopoverTrigger,
 } from "@nextui-org/react";
 import { useNavigate } from "@tanstack/react-router";
-import { Notification01Icon } from "hugeicons-react";
-import { useAtomValue } from "jotai";
+import { InboxIcon, Notification01Icon } from "hugeicons-react";
+import { useAtom } from "jotai";
 import { useTranslation } from "react-i18next";
 
 function AppNavbar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const member = useAtomValue(memberAtom);
+  const [member, setMember] = useAtom(memberAtom);
+
+  const handleSignOut = async () => {
+    setMember({} as MemberResDto);
+    await axiosInstance.delete("/auth/sign-out");
+    navigate({ to: "/auth/sign-in" });
+  };
   return (
     <Navbar className="uppercase bg-primary-50">
       <NavbarBrand
@@ -33,6 +41,13 @@ function AppNavbar() {
       <NavbarContent justify="end">
         {member.id ? (
           <div className="flex flex-row gap-4">
+            <Button
+              isIconOnly
+              variant="light"
+              onClick={() => navigate({ to: "/requests" })}
+            >
+              <InboxIcon />
+            </Button>
             <Button isIconOnly variant="light">
               <Notification01Icon />
             </Button>
@@ -41,7 +56,7 @@ function AppNavbar() {
                 <Avatar src={member.imgUrl} className="transition-transform" />
               </PopoverTrigger>
               <PopoverContent className="p-1">
-                <Button>Sign Out</Button>
+                <Button onClick={() => handleSignOut()}>Sign Out</Button>
               </PopoverContent>
             </Popover>
           </div>

@@ -27,7 +27,7 @@ function Page() {
             </Chip>
           </div>
           <p className="text-lg font-medium">
-            {data.address} {data.ward}, {data.district}, {data.province}
+            {data.address} - {data.ward}, {data.district}, {data.province}
           </p>
           {/* Units */}
           <p className="text-xl font-semibold">Units</p>
@@ -39,7 +39,7 @@ function Page() {
           <p>{data.details}</p>
           {/* Amenities */}
           <p className="text-xl font-semibold">Amenities</p>
-          <div className="flex flex-row gap-3">
+          <div className="flex flex-row flex-wrap gap-3">
             {data.amenities.map((item) => (
               <Chip key={item} size="lg" color="primary" variant="flat">
                 {item}
@@ -78,7 +78,7 @@ function UnitCard(props: UnitResDto) {
       <div className="flex-1 flex flex-col justify-between ml-4">
         <p className="text-lg font-bold">{props.name}</p>
         <p className="text-2xl font-extrabold">
-          {vndFormatter.format(+props.price)}
+          {vndFormatter.format(+props.price)}/month
         </p>
         <p className="text-sm text-default-500">{props.details}</p>
         <p className="font-medium">{props.area} m2</p>

@@ -69,7 +69,6 @@ function Page() {
                   htmlFor="Email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {" "}
                   Email{" "}
                 </label>
 
@@ -86,7 +85,6 @@ function Page() {
                   htmlFor="Password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {" "}
                   Password{" "}
                 </label>
 
