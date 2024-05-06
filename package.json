@@ -9,7 +9,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "libs:build": "meta git update && meta git checkout master && meta git pull --include-only src/libs"
+    "libs:build": "meta git update && meta git checkout master --include-only src/libs && meta git pull --include-only src/libs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
