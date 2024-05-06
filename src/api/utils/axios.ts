@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export interface ValidationErrors {
   [field: string]:
@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
     };
 
     return Promise.reject(customError);
-  }
+  },
 );
 
 export { axiosInstance };

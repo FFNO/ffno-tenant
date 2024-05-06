@@ -1,4 +1,4 @@
-import { PropertyType } from "./enums";
+import { PropertyType } from './enums';
 
 export enum MemberRole {
   ADMIN,

@@ -1,7 +1,7 @@
-import { MemberResDto } from "@/types";
-import { atomWithStorage } from "jotai/utils";
+import { MemberResDto } from '@/types';
+import { atomWithStorage } from 'jotai/utils';
 
 export const memberAtom = atomWithStorage(
-  "member",
-  JSON.parse(localStorage.getItem("member") || "{}") as MemberResDto
+  'member',
+  JSON.parse(localStorage.getItem('member') || '{}') as MemberResDto,
 );

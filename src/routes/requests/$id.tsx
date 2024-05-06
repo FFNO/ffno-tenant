@@ -1,21 +1,21 @@
-import { dataProvider, useUpdate } from "@/api";
-import { memberAtom } from "@/app";
+import { dataProvider, useUpdate } from '@/api';
+import { memberAtom } from '@/app';
 import {
-  RequestResDto,
+  IRequestResDto,
   RequestStatus,
   requestCategoryRecord,
   requestStatusRecord,
-} from "@/libs";
-import { Avatar, Button } from "@nextui-org/react";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import dayjs from "dayjs";
-import { Cancel01Icon, Tick01Icon } from "hugeicons-react";
-import { useAtomValue } from "jotai";
+} from '@/libs';
+import { Avatar, Button } from '@nextui-org/react';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
+import dayjs from 'dayjs';
+import { Cancel01Icon, Tick01Icon } from 'hugeicons-react';
+import { useAtomValue } from 'jotai';
 
-export const Route = createFileRoute("/requests/$id")({
+export const Route = createFileRoute('/requests/$id')({
   component: Page,
   loader: ({ params: { id } }) =>
-    dataProvider.getOne<RequestResDto>({ resource: "requests", id }),
+    dataProvider.getOne<IRequestResDto>({ resource: 'requests', id }),
 });
 
 function Page() {
@@ -41,7 +41,7 @@ function Page() {
         </div>
         <div className="flex flex-row items-center gap-1">
           {renderStatus(data.status)}
-          <Avatar size={"sm"} src={data.sender.imgUrl} />
+          <Avatar size={'sm'} src={data.sender.imgUrl} />
           <p className="font-bold">{data.sender.name}</p>
           <p>has requested</p>
           <p className="font-bold">{data.name}</p>
@@ -76,7 +76,7 @@ function Page() {
                 ) : (
                   <>
                     {renderStatus(status)}
-                    {dayjs(updatedAt).format("HH:mm:ss DD/MM/YYYY")}
+                    {dayjs(updatedAt).format('HH:mm:ss DD/MM/YYYY')}
                   </>
                 )}
               </div>
@@ -95,10 +95,10 @@ function renderStatus(status: RequestStatus) {
       disableRipple
       color={
         status === RequestStatus.PENDING
-          ? "warning"
+          ? 'warning'
           : status === RequestStatus.ACCEPTED
-            ? "success"
-            : "danger"
+            ? 'success'
+            : 'danger'
       }
     >
       {requestStatusRecord[status]}

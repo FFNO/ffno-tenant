@@ -4,6 +4,6 @@ export enum PropertyType {
 }
 
 export const propertyTypeRecord: Record<PropertyType, string> = {
-  [PropertyType.SINGLE_UNIT]: "Single Unit",
-  [PropertyType.MULTIPLE_UNIT]: "Multiple Unit",
+  [PropertyType.SINGLE_UNIT]: 'Single Unit',
+  [PropertyType.MULTIPLE_UNIT]: 'Multiple Unit',
 };
