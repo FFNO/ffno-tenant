@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { axiosInstance, queryClient } from './utils';
 
-interface GetListResDto<T> {
+export interface GetListResDto<T> {
   data: T[];
   total: number;
 }
