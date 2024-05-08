@@ -12,9 +12,12 @@ export const Message = (props: Props) => {
   const currentMember = useAtomValue(memberAtom);
   const contactRecord = useAtomValue(contactAtom);
 
-  const isMyself = useMemo(() => currentMember.id === props.senderId, []);
+  const isMyself = useMemo(
+    () => currentMember.id === props.senderId,
+    [currentMember.id, props.senderId],
+  );
   return (
-    <div className={cn('px-2 py-4 flex flex-col', isMyself && 'items-end')}>
+    <div className={cn('px-2 flex flex-col', isMyself && 'items-end')}>
       <div className="flex gap-2 items-center">
         {!isMyself && (
           <Tooltip content={contactRecord[props.senderId]?.name}>

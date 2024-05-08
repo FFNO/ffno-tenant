@@ -53,11 +53,11 @@ function Page() {
         </ButtonGroup>
       </div>
       <div className="h-full flex flex-col overflow-auto">
-        <div className="flex flex-col-reverse gap-2">
-          {data.messages && <Messages items={data.messages} />}
-        </div>
+        {data.messages && (
+          <Messages channelId={data.channelId} items={data.messages} />
+        )}
       </div>
-      <ChatInput />
+      <ChatInput channelId={data.channelId} />
     </div>
   );
 }

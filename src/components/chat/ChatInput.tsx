@@ -1,24 +1,21 @@
-import { memberAtom } from '@/app';
+import { socketService } from '@/services/socket';
 import { Button, Input } from '@nextui-org/react';
 import { Image01Icon, MailSend01Icon, Mic01Icon } from 'hugeicons-react';
-import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 
-export const ChatInput = () => {
-  const member = useAtomValue(memberAtom);
+interface Props {
+  channelId: string;
+}
+
+export const ChatInput = ({ channelId }: Props) => {
   const [message, setMessage] = useState('');
 
   const handleSendMessage = async () => {
     if (message !== '') {
-      //   socket?.send(
-      //     JSON.stringify({
-      //       user: {
-      //         id: member?.id,
-      //       },
-      //       text: message,
-      //       date: Date.now(),
-      //     })
-      //   );
+      socketService.sendMessage({
+        channelId,
+        content: message,
+      });
       setMessage('');
     }
   };
