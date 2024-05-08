@@ -18,7 +18,7 @@ export const Messages = ({ channelId, items }: Props) => {
   }, [items]);
 
   useEffect(() => {
-    socketService.socket.on(
+    socketService.subcribeTo(
       `${CHAT_PATTERNS.RECEIVE_MESSAGE}${channelId}`,
       () => {
         router.invalidate();
@@ -26,14 +26,14 @@ export const Messages = ({ channelId, items }: Props) => {
     );
 
     return () => {
-      console.log(channelId);
-
-      socketService.socket.off(`${CHAT_PATTERNS.RECEIVE_MESSAGE}${channelId}`);
+      socketService.unsubcribeTo(
+        `${CHAT_PATTERNS.RECEIVE_MESSAGE}${channelId}`,
+      );
     };
   }, [channelId]);
 
   return (
-    <div className="flex flex-col-reverse gap-2">
+    <div className="flex flex-col-reverse gap-2 py-2">
       <div ref={messagesEndRef} />
       {items.map((message) => (
         <Message key={message.id} {...message} />

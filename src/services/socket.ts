@@ -2,13 +2,13 @@ import { CHAT_PATTERNS, ISendMessageDto } from '@/libs';
 import { Socket, io } from 'socket.io-client';
 
 class SocketService {
-  public readonly socket: Socket = io(import.meta.env.VITE_SOCKET_URL, {
-    autoConnect: true,
+  private readonly socket: Socket = io(import.meta.env.VITE_SOCKET_URL, {
+    autoConnect: false,
     withCredentials: true,
   });
 
-  connectWithAuthToken(token: string) {
-    this.socket.auth = { token };
+  connect() {
+    this.socket.connect();
   }
 
   disconnect() {
@@ -20,22 +20,13 @@ class SocketService {
     this.socket.emit(CHAT_PATTERNS.SEND_MESSAGE, data);
   }
 
-  notifyTyping(roomId: number) {
-    this.socket.emit('isTyping', roomId);
+  subcribeTo(event: string, callback: () => void) {
+    this.socket.on(event, callback);
   }
-  //   subscribeToTypingNotifications(
-  //     typingNotificationsHandler: ServerToClientEvents['isTyping'],
-  //   ) {
-  //     this.socket.on('isTyping', typingNotificationsHandler);
-  //   }
 
-  //   joinRoom(roomId: number) {
-  //     this.socket.emit('join', roomId);
-  //   }
-
-  //   leaveRoom(roomId: number) {
-  //     this.socket.emit('leave', roomId);
-  //   }
+  unsubcribeTo(event: string) {
+    this.socket.off(event);
+  }
 }
 
 export const socketService = new SocketService();

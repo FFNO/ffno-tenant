@@ -1,15 +1,16 @@
-import { dataProvider } from "@/api";
-import { PropertyResDto, UnitResDto } from "@/types";
-import { propertyTypeRecord } from "@/types/enums";
-import { vndFormatter } from "@/utils";
-import { Button, Chip, Image } from "@nextui-org/react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { PhotoProvider, PhotoView } from "react-photo-view";
+import { dataProvider } from '@/api';
+import MemberCard from '@/components/MemberCard';
+import { PropertyResDto, UnitResDto } from '@/types';
+import { propertyTypeRecord } from '@/types/enums';
+import { vndFormatter } from '@/utils';
+import { Button, Chip, Image } from '@nextui-org/react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
 
-export const Route = createFileRoute("/properties/$id")({
+export const Route = createFileRoute('/properties/$id')({
   component: Page,
   loader: ({ params: { id } }) =>
-    dataProvider.getOne<PropertyResDto>({ resource: "properties", id }),
+    dataProvider.getOne<PropertyResDto>({ resource: 'properties', id }),
 });
 
 function Page() {
@@ -45,6 +46,11 @@ function Page() {
                 {item}
               </Chip>
             ))}
+          </div>
+          {/* Contacts */}
+          <p className="text-xl font-semibold">Contacts</p>
+          <div className="flex flex-row flex-wrap gap-3">
+            <MemberCard {...data.owner} />
           </div>
         </div>
         <div className="col-span-2">
@@ -89,7 +95,7 @@ function UnitCard(props: UnitResDto) {
           size="lg"
           variant="light"
           onClick={() =>
-            navigate({ to: "/units/$id", params: { id: props.id } })
+            navigate({ to: '/units/$id', params: { id: props.id } })
           }
         >
           View details
