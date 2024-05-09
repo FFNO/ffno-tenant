@@ -1,10 +1,10 @@
-import { dataProvider } from "@/api";
-import BuildingImage from "@/assets/building.svg";
-import LandingImage from "@/assets/landing.webp";
-import PropertyCard from "@/components/PropertyCard";
-import { PropertyResDto } from "@/types";
-import { Avatar, Button, Image, Input } from "@nextui-org/react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { dataProvider } from '@/api';
+import BuildingImage from '@/assets/building.svg';
+import LandingImage from '@/assets/landing.webp';
+import PropertyCard from '@/components/PropertyCard';
+import { IPropertyResDto } from '@/libs';
+import { Avatar, Button, Image, Input } from '@nextui-org/react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import {
   Building06Icon,
   DollarSquareIcon,
@@ -18,15 +18,15 @@ import {
   SearchAreaIcon,
   SquareLock02Icon,
   UserGroupIcon,
-} from "hugeicons-react";
-import React from "react";
-import { useTranslation } from "react-i18next";
+} from 'hugeicons-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: LandingPage,
   loader: () =>
-    dataProvider.getList<PropertyResDto>({
-      resource: "units",
+    dataProvider.getList<IPropertyResDto>({
+      resource: 'units',
       params: { pageSize: 3 },
     }),
 });
@@ -42,8 +42,8 @@ function LandingPage() {
         {/* Section 1 */}
         <div className="grid grid-cols-2">
           <div className="flex flex-col gap-8">
-            <p className="text-6xl font-bold">{t("landing.section-1")}</p>
-            <p className="text-xl font-medium">{t("landing.section-2")}</p>
+            <p className="text-6xl font-bold">{t('landing.section-1')}</p>
+            <p className="text-xl font-medium">{t('landing.section-2')}</p>
             <div className="grid grid-cols-2 space-x-4">
               <div className="flex flex-col gap-6">
                 <div className="relative w-min">
@@ -149,9 +149,9 @@ function LandingPage() {
             placeholder="Search..."
             className="col-start-3"
             onKeyDown={(e) => {
-              if (e.code === "Enter") {
+              if (e.code === 'Enter') {
                 navigate({
-                  to: "/properties",
+                  to: '/properties',
                   search: { name: e.currentTarget.value },
                 });
               }
@@ -164,7 +164,7 @@ function LandingPage() {
         <Button
           size="lg"
           color="primary"
-          onClick={() => navigate({ to: "/properties" })}
+          onClick={() => navigate({ to: '/properties' })}
         >
           Browse more properties
         </Button>
@@ -183,20 +183,20 @@ function LandingPage() {
           className="my-4 max-w-[450px]"
           endContent={<Button color="primary">Submit</Button>}
           classNames={{
-            input: ["bg-transparent", "placeholder:text-default-500"],
-            innerWrapper: "bg-transparent",
+            input: ['bg-transparent', 'placeholder:text-default-500'],
+            innerWrapper: 'bg-transparent',
             inputWrapper: [
-              "h-16",
-              "bg-white",
-              "hover:bg-white",
-              "group-data-[focus=true]:bg-white",
-              "group-data-[hover=true]:bg-white",
-              "!cursor-text",
+              'h-16',
+              'bg-white',
+              'hover:bg-white',
+              'group-data-[focus=true]:bg-white',
+              'group-data-[hover=true]:bg-white',
+              '!cursor-text',
             ],
           }}
         />
         <span className="flex flex-row text-sm font-medium text-default-400">
-          Join <p className="text-white font-semibold">&nbsp;10,000+&nbsp;</p>{" "}
+          Join <p className="text-white font-semibold">&nbsp;10,000+&nbsp;</p>{' '}
           other landlords in our estatery community.
         </span>
       </div>

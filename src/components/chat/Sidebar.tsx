@@ -1,6 +1,6 @@
 import { useList } from '@/api';
 import { contactAtom, memberAtom } from '@/app';
-import { MemberResDto } from '@/types';
+import { IMemberResDto } from '@/libs';
 import {
   Accordion,
   AccordionItem,
@@ -16,14 +16,14 @@ import { useEffect } from 'react';
 export const Sidebar = () => {
   const navigate = useNavigate();
   const currentMember = useAtomValue(memberAtom);
-  const { data } = useList<MemberResDto>({
+  const { data } = useList<IMemberResDto>({
     resource: 'members/contacts',
   });
   const [contact, setContact] = useAtom(contactAtom);
 
   useEffect(() => {
     if (data && !Object.keys(contact).length) {
-      const record: Record<string, MemberResDto> = {};
+      const record: Record<string, IMemberResDto> = {};
       record[currentMember.id] = currentMember;
 
       data.data.forEach((member) => {
