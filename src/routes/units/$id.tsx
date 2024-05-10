@@ -1,35 +1,34 @@
-import { dataProvider, useCreate } from "@/api";
-import { memberAtom } from "@/app";
+import { dataProvider, useCreate } from '@/api';
+import { memberAtom } from '@/app';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
-import { RequestCategory } from "@/libs";
-import { UnitResDto } from "@/types";
-import { vndFormatter } from "@/utils";
-import { Button, Chip, Image } from "@nextui-org/react";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useAtomValue } from "jotai";
-import { toast } from "react-toastify";
+} from '@/components/ui/carousel';
+import { IUnitResDto, RequestCategory } from '@/libs';
+import { vndFormatter } from '@/utils';
+import { Button, Chip, Image } from '@nextui-org/react';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { useAtomValue } from 'jotai';
+import { toast } from 'react-toastify';
 
-export const Route = createFileRoute("/units/$id")({
+export const Route = createFileRoute('/units/$id')({
   component: Page,
   loader: ({ params: { id } }) =>
-    dataProvider.getOne<UnitResDto>({ resource: "units", id }),
+    dataProvider.getOne<IUnitResDto>({ resource: 'units', id }),
 });
 
-function renderRentalStatus(unit: UnitResDto) {
+function renderRentalStatus(unit: IUnitResDto) {
   const {
     tenants: { length },
   } = unit;
 
   if (length) {
-    return "Occupied";
+    return 'Occupied';
   }
-  return "Vacant";
+  return 'Vacant';
 }
 
 function Page() {
@@ -38,9 +37,9 @@ function Page() {
 
   const member = useAtomValue(memberAtom);
   const mutateRequest = useCreate({
-    resource: "requests",
+    resource: 'requests',
     onSuccess() {
-      toast.success("Send request successfully");
+      toast.success('Send request successfully');
       router.invalidate();
     },
   });
@@ -70,9 +69,9 @@ function Page() {
               </p>
               <Chip
                 size="lg"
-                color={data.tenants.length ? "warning" : "success"}
+                color={data.tenants.length ? 'warning' : 'success'}
                 variant="flat"
-                classNames={{ content: "font-bold uppercase" }}
+                classNames={{ content: 'font-bold uppercase' }}
               >
                 {renderRentalStatus(data)}
               </Chip>
@@ -83,12 +82,12 @@ function Page() {
               onClick={() => handleRequest()}
               isDisabled={data.requested}
             >
-              {data.requested ? "Request sent" : "Request to apply"}
+              {data.requested ? 'Request sent' : 'Request to apply'}
             </Button>
           </div>
           {/* Brief */}
           <p className="text-lg">
-            {data.property.address} - {data.property.ward},{" "}
+            {data.property.address} - {data.property.ward},{' '}
             {data.property.district}, {data.property.province}
           </p>
         </div>

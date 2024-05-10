@@ -1,7 +1,6 @@
 import { dataProvider } from '@/api';
 import MemberCard from '@/components/MemberCard';
-import { PropertyResDto, UnitResDto } from '@/types';
-import { propertyTypeRecord } from '@/types/enums';
+import { IPropertyResDto, IUnitResDto, propertyTypeRecord } from '@/libs';
 import { vndFormatter } from '@/utils';
 import { Button, Chip, Image } from '@nextui-org/react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
@@ -10,7 +9,7 @@ import { PhotoProvider, PhotoView } from 'react-photo-view';
 export const Route = createFileRoute('/properties/$id')({
   component: Page,
   loader: ({ params: { id } }) =>
-    dataProvider.getOne<PropertyResDto>({ resource: 'properties', id }),
+    dataProvider.getOne<IPropertyResDto>({ resource: 'properties', id }),
 });
 
 function Page() {
@@ -70,7 +69,7 @@ function Page() {
   );
 }
 
-function UnitCard(props: UnitResDto) {
+function UnitCard(props: IUnitResDto) {
   const navigate = useNavigate();
   return (
     <div className="flex flex-row border rounded-lg p-4 h-40">

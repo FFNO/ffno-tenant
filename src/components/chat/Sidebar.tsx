@@ -1,7 +1,6 @@
 import { useList } from '@/api';
 import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
-import { IChannelDto } from '@/libs';
-import { MemberResDto } from '@/types';
+import { IChannelDto, IMemberResDto } from '@/libs';
 import {
   Accordion,
   AccordionItem,
@@ -20,7 +19,7 @@ export const ChatSidebar = () => {
   const { data: channels } = useList<IChannelDto>({
     resource: 'chat/channels',
   });
-  const { data: contacts } = useList<MemberResDto>({
+  const { data: contacts } = useList<IMemberResDto>({
     resource: 'members/contacts',
   });
   const [contactRecord, setContactRecord] = useAtom(contactRecordAtom);
@@ -33,7 +32,7 @@ export const ChatSidebar = () => {
       (!Object.keys(channelRecord).length || !Object.keys(contactRecord).length)
     ) {
       const tempChannel: Record<string, IChannelDto> = {};
-      const tempContact: Record<string, MemberResDto> = {};
+      const tempContact: Record<string, IMemberResDto> = {};
 
       tempContact[currentMember.id] = currentMember;
 

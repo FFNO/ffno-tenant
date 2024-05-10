@@ -1,6 +1,6 @@
 import { axiosInstance } from '@/api/utils';
 import { memberAtom } from '@/app';
-import { MemberResDto } from '@/types';
+import { IMemberResDto } from '@/libs';
 import {
   Avatar,
   Button,
@@ -23,7 +23,7 @@ function AppNavbar() {
   const [member, setMember] = useAtom(memberAtom);
 
   const handleSignOut = async () => {
-    setMember({} as MemberResDto);
+    setMember({} as IMemberResDto);
     await axiosInstance.delete('/auth/sign-out');
     navigate({ to: '/auth/sign-in' });
   };

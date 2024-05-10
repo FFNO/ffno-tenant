@@ -1,6 +1,5 @@
 import { contactRecordAtom, memberAtom } from '@/app';
-import { memberRoleRecord } from '@/libs';
-import { MemberResDto } from '@/types';
+import { IMemberResDto, memberRoleRecord } from '@/libs';
 import {
   Avatar,
   Button,
@@ -13,7 +12,7 @@ import {
 import { useNavigate } from '@tanstack/react-router';
 import { useAtomValue, useSetAtom } from 'jotai';
 
-interface Props extends MemberResDto {}
+interface Props extends IMemberResDto {}
 
 function MemberCard(props: Props) {
   const navigate = useNavigate();

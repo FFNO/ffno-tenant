@@ -1,10 +1,10 @@
-import { Card, CardBody, Divider, Image } from "@nextui-org/react";
-import { Link } from "@tanstack/react-router";
-import { RotateSquareIcon } from "hugeicons-react";
-import { minBy } from "lodash";
-import { PropertyResDto } from "../types";
+import { IPropertyResDto } from '@/libs';
+import { Card, CardBody, Divider, Image } from '@nextui-org/react';
+import { Link } from '@tanstack/react-router';
+import { RotateSquareIcon } from 'hugeicons-react';
+import { minBy } from 'lodash';
 
-interface Props extends PropertyResDto {}
+interface Props extends IPropertyResDto {}
 
 function PropertyCard(props: Props) {
   return (
@@ -23,13 +23,13 @@ function PropertyCard(props: Props) {
             <div className="flex flex-col gap-4 flex-1">
               <span className="flex flex-row items-end">
                 <p className="text-2xl text-primary font-extrabold">
-                  {minBy(props.units, "price")?.price}+ ₫
+                  {minBy(props.units, 'price')?.price}+ ₫
                 </p>
                 <p className="font-medium text-base text-default-500">/month</p>
               </span>
               <p className="text-lg font-bold">{props.name}</p>
               <p className="text-sm text-default-500">
-                {props.address} - {props.ward}, {props.district},{" "}
+                {props.address} - {props.ward}, {props.district},{' '}
                 {props.province}
               </p>
             </div>
