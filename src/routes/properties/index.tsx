@@ -1,7 +1,7 @@
-import { dataProvider } from "@/api";
-import PropertyCard from "@/components/PropertyCard";
-import { PropertyResDto } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { dataProvider } from '@/api';
+import PropertyCard from '@/components/PropertyCard';
+import { IPropertyResDto } from '@/libs';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   Card,
@@ -9,11 +9,11 @@ import {
   CardHeader,
   Input,
   Slider,
-} from "@nextui-org/react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+} from '@nextui-org/react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const searchSchema = z.object({
   name: z
@@ -23,12 +23,12 @@ const searchSchema = z.object({
   minPrice: z.coerce.number().optional(),
 });
 
-export const Route = createFileRoute("/properties/")({
+export const Route = createFileRoute('/properties/')({
   component: Page,
   validateSearch: searchSchema.parse,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>
-    dataProvider.getList<PropertyResDto>({ resource: "units", params: deps }),
+    dataProvider.getList<IPropertyResDto>({ resource: 'units', params: deps }),
 });
 
 function Page() {
@@ -56,13 +56,13 @@ function Page() {
               navigate({ search: { ...values, minPrice, maxPrice } });
             })}
           >
-            <Input size="sm" label="Name" {...form.register("name")} />
+            <Input size="sm" label="Name" {...form.register('name')} />
             <Slider
               label="Price Range"
               step={500000}
               minValue={0}
               maxValue={10000000}
-              formatOptions={{ style: "currency", currency: "VND" }}
+              formatOptions={{ style: 'currency', currency: 'VND' }}
               value={priceRange}
               onChange={setPriceRange}
             />

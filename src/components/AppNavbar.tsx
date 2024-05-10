@@ -1,6 +1,6 @@
-import { axiosInstance } from "@/api/utils";
-import { memberAtom } from "@/app";
-import { MemberResDto } from "@/types";
+import { axiosInstance } from '@/api/utils';
+import { memberAtom } from '@/app';
+import { IMemberResDto } from '@/libs';
 import {
   Avatar,
   Button,
@@ -10,11 +10,12 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@nextui-org/react";
-import { useNavigate } from "@tanstack/react-router";
-import { InboxIcon, Notification01Icon } from "hugeicons-react";
-import { useAtom } from "jotai";
-import { useTranslation } from "react-i18next";
+  Tooltip,
+} from '@nextui-org/react';
+import { useNavigate } from '@tanstack/react-router';
+import { InboxIcon, Message01Icon, Notification01Icon } from 'hugeicons-react';
+import { useAtom } from 'jotai';
+import { useTranslation } from 'react-i18next';
 
 function AppNavbar() {
   const { t } = useTranslation();
@@ -22,15 +23,15 @@ function AppNavbar() {
   const [member, setMember] = useAtom(memberAtom);
 
   const handleSignOut = async () => {
-    setMember({} as MemberResDto);
-    await axiosInstance.delete("/auth/sign-out");
-    navigate({ to: "/auth/sign-in" });
+    setMember({} as IMemberResDto);
+    await axiosInstance.delete('/auth/sign-out');
+    navigate({ to: '/auth/sign-in' });
   };
   return (
     <Navbar className="uppercase bg-primary-50">
       <NavbarBrand
         className="cursor-pointer"
-        onClick={() => navigate({ to: "/" })}
+        onClick={() => navigate({ to: '/' })}
       >
         <p className="font-bold text-inherit mr-8">FFNO</p>
       </NavbarBrand>
@@ -41,16 +42,29 @@ function AppNavbar() {
       <NavbarContent justify="end">
         {member.id ? (
           <div className="flex flex-row gap-4">
-            <Button
-              isIconOnly
-              variant="light"
-              onClick={() => navigate({ to: "/requests" })}
-            >
-              <InboxIcon />
-            </Button>
-            <Button isIconOnly variant="light">
-              <Notification01Icon />
-            </Button>
+            <Tooltip content="Chat">
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => navigate({ to: '/chat' })}
+              >
+                <Message01Icon />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Requests">
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => navigate({ to: '/requests' })}
+              >
+                <InboxIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Notifications">
+              <Button isIconOnly variant="light">
+                <Notification01Icon />
+              </Button>
+            </Tooltip>
             <Popover showArrow placement="bottom">
               <PopoverTrigger>
                 <Avatar src={member.imgUrl} className="transition-transform" />
@@ -66,17 +80,17 @@ function AppNavbar() {
               color="primary"
               variant="bordered"
               className="font-semibold"
-              onClick={() => navigate({ to: "/auth/sign-in" })}
+              onClick={() => navigate({ to: '/auth/sign-in' })}
             >
-              {t("button.sign-in")}
+              {t('button.sign-in')}
             </Button>
             <Button
               color="primary"
               variant="solid"
               className="font-semibold"
-              onClick={() => navigate({ to: "/auth/sign-up" })}
+              onClick={() => navigate({ to: '/auth/sign-up' })}
             >
-              {t("button.sign-up")}
+              {t('button.sign-up')}
             </Button>
           </>
         )}

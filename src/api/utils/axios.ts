@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { isArray } from 'lodash';
+import { toast } from 'react-toastify';
 
 export interface ValidationErrors {
   [field: string]:
@@ -29,7 +31,11 @@ axiosInstance.interceptors.response.use(
       message: error.response?.data?.message ?? error.message,
       statusCode: error.response?.status,
     };
+    const message = isArray(customError.message)
+      ? customError.message[0]
+      : customError.message;
 
+    toast.error(message);
     return Promise.reject(customError);
   },
 );
