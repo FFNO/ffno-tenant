@@ -1,5 +1,5 @@
 import { dataProvider } from '@/api';
-import { contactAtom, memberAtom } from '@/app';
+import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
 import { ChatInput } from '@/components/chat/ChatInput';
 import { Messages } from '@/components/chat/Messages';
 import { IGetListMessageResDto } from '@/libs';
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/chat/$channelId')({
   component: Page,
   loader: ({ params: { channelId } }) =>
     dataProvider.getOne<IGetListMessageResDto>({
-      resource: 'chat',
+      resource: 'chat/channels',
       id: channelId,
     }),
 });
@@ -21,7 +21,8 @@ export const Route = createFileRoute('/chat/$channelId')({
 function Page() {
   const data = Route.useLoaderData();
   const currentMember = useAtomValue(memberAtom);
-  const contactRecord = useAtomValue(contactAtom);
+  const contactRecord = useAtomValue(contactRecordAtom);
+  const channelRecord = useAtomValue(channelRecordAtom);
 
   const member = useMemo(() => {
     if (!data.channelId) {
@@ -31,8 +32,12 @@ function Page() {
     const memberId = data.channelId
       .replace(currentMember.id, '')
       .replace('_', '');
-    return contactRecord[memberId] ?? null;
-  }, [data.channelId, currentMember.id, contactRecord]);
+
+    console.log(memberId);
+    console.log(contactRecord);
+
+    return contactRecord[memberId] ?? channelRecord[data.channelId] ?? null;
+  }, [data.channelId, currentMember.id, contactRecord, channelRecord]);
 
   return (
     <div className="flex flex-col w-full">

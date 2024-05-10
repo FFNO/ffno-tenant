@@ -18,18 +18,17 @@ export const Messages = ({ channelId, items }: Props) => {
   }, [items]);
 
   useEffect(() => {
-    socketService.subcribeTo(
+    socketService.subscribeTo(
       `${CHAT_PATTERNS.RECEIVE_MESSAGE}${channelId}`,
-      () => {
-        router.invalidate();
-      },
+      () => router.invalidate(),
     );
 
     return () => {
-      socketService.unsubcribeTo(
+      socketService.unsubscribeTo(
         `${CHAT_PATTERNS.RECEIVE_MESSAGE}${channelId}`,
       );
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channelId]);
 
   return (

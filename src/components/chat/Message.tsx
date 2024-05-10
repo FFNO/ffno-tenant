@@ -1,4 +1,4 @@
-import { contactAtom, memberAtom } from '@/app';
+import { contactRecordAtom, memberAtom } from '@/app';
 import { IMessageResDto } from '@/libs';
 import { cn } from '@/utils';
 import { Avatar, Tooltip } from '@nextui-org/react';
@@ -10,7 +10,7 @@ interface Props extends IMessageResDto {}
 
 export const Message = (props: Props) => {
   const currentMember = useAtomValue(memberAtom);
-  const contactRecord = useAtomValue(contactAtom);
+  const contactRecord = useAtomValue(contactRecordAtom);
 
   const isMyself = useMemo(
     () => currentMember.id === props.senderId,
@@ -24,7 +24,10 @@ export const Message = (props: Props) => {
             <Avatar src={contactRecord[props.senderId]?.imgUrl} />
           </Tooltip>
         )}
-        <Tooltip content={dayjs(props.createdAt).from(Date.now())}>
+        <Tooltip
+          placement="bottom"
+          content={dayjs(props.createdAt).from(Date.now())}
+        >
           <div
             className={cn(
               'px-3 py-2 rounded-lg ',

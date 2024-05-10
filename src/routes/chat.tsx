@@ -1,5 +1,5 @@
 import { memberAtom } from '@/app';
-import { Sidebar } from '@/components/chat/Sidebar';
+import { ChatSidebar } from '@/components/chat/Sidebar';
 import { socketService } from '@/services/socket';
 import { Outlet, createFileRoute } from '@tanstack/react-router';
 import { useAtomValue } from 'jotai';
@@ -19,7 +19,7 @@ function ChatLayout() {
 
   return (
     <div className="flex flex-row h-[calc(100vh-121px)]">
-      <Sidebar />
+      <ChatSidebar />
       <Outlet />
     </div>
   );

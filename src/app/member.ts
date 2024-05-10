@@ -7,4 +7,4 @@ export const memberAtom = atomWithStorage(
   JSON.parse(localStorage.getItem('member') || '{}') as MemberResDto,
 );
 
-export const contactAtom = atom<Record<string, MemberResDto>>({});
+export const contactRecordAtom = atom<Record<string, MemberResDto>>({});

@@ -1,4 +1,4 @@
-import { memberAtom } from '@/app';
+import { contactRecordAtom, memberAtom } from '@/app';
 import { memberRoleRecord } from '@/libs';
 import { MemberResDto } from '@/types';
 import {
@@ -11,13 +11,14 @@ import {
   Snippet,
 } from '@nextui-org/react';
 import { useNavigate } from '@tanstack/react-router';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 
 interface Props extends MemberResDto {}
 
 function MemberCard(props: Props) {
   const navigate = useNavigate();
   const currentMember = useAtomValue(memberAtom);
+  const setContactRecord = useSetAtom(contactRecordAtom);
 
   return (
     <Card className="w-[400px]">
@@ -35,14 +36,11 @@ function MemberCard(props: Props) {
         </div>
         <Button
           color="primary"
-          onPress={() =>
-            navigate({
-              to: '/chat/$channelId',
-              params: {
-                channelId: [props.id, currentMember.id].sort().join('_'),
-              },
-            })
-          }
+          onPress={() => {
+            setContactRecord((prev) => ({ ...prev, [props.id]: props }));
+            const channelId = [props.id, currentMember.id].sort().join('_');
+            navigate({ to: '/chat/$channelId', params: { channelId } });
+          }}
         >
           Contact
         </Button>

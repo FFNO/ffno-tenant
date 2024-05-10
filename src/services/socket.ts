@@ -20,11 +20,11 @@ class SocketService {
     this.socket.emit(CHAT_PATTERNS.SEND_MESSAGE, data);
   }
 
-  subcribeTo(event: string, callback: () => void) {
+  subscribeTo(event: string, callback: () => void) {
     this.socket.on(event, callback);
   }
 
-  unsubcribeTo(event: string) {
+  unsubscribeTo(event: string) {
     this.socket.off(event);
   }
 }

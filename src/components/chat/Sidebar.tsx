@@ -1,5 +1,6 @@
 import { useList } from '@/api';
-import { contactAtom, memberAtom } from '@/app';
+import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
+import { IChannelDto } from '@/libs';
 import { MemberResDto } from '@/types';
 import {
   Accordion,
@@ -13,27 +14,38 @@ import { AddSquareIcon, FilterIcon } from 'hugeicons-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 
-export const Sidebar = () => {
+export const ChatSidebar = () => {
   const navigate = useNavigate();
   const currentMember = useAtomValue(memberAtom);
-  const { data } = useList<MemberResDto>({
+  const { data: channels } = useList<IChannelDto>({
+    resource: 'chat/channels',
+  });
+  const { data: contacts } = useList<MemberResDto>({
     resource: 'members/contacts',
   });
-  const [contact, setContact] = useAtom(contactAtom);
+  const [contactRecord, setContactRecord] = useAtom(contactRecordAtom);
+  const [channelRecord, setChannelRecord] = useAtom(channelRecordAtom);
 
   useEffect(() => {
-    if (data && !Object.keys(contact).length) {
-      const record: Record<string, MemberResDto> = {};
-      record[currentMember.id] = currentMember;
+    if (
+      channels &&
+      contacts &&
+      (!Object.keys(channelRecord).length || !Object.keys(contactRecord).length)
+    ) {
+      const tempChannel: Record<string, IChannelDto> = {};
+      const tempContact: Record<string, MemberResDto> = {};
 
-      data.data.forEach((member) => {
-        record[member.id] = member;
-      });
+      tempContact[currentMember.id] = currentMember;
 
-      setContact(record);
+      channels.data.forEach((channel) => (tempChannel[channel.id] = channel));
+      contacts.data.forEach((contact) => (tempContact[contact.id] = contact));
+
+      setContactRecord(tempContact);
+      setChannelRecord(tempChannel);
     }
     return () => {};
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channels, contacts]);
 
   return (
     <div className="w-80 h-full border-r overflow-scroll">
@@ -51,12 +63,12 @@ export const Sidebar = () => {
         <Accordion
           isCompact
           selectionMode="multiple"
-          defaultExpandedKeys={['pinned']}
+          defaultExpandedKeys={['recently']}
         >
-          <AccordionItem key={'pinned'} title={'Pinned'}>
-            {data?.data.map((member) => (
+          <AccordionItem key={'recently'} title={'Recently'}>
+            {channels?.data.map((channel) => (
               <Button
-                key={member.id}
+                key={channel.id}
                 fullWidth
                 variant={'light'}
                 size="lg"
@@ -65,7 +77,7 @@ export const Sidebar = () => {
                   navigate({
                     to: '/chat/$channelId',
                     params: {
-                      channelId: [member.id, currentMember.id].sort().join('_'),
+                      channelId: channel.id,
                     },
                   })
                 }
@@ -76,22 +88,32 @@ export const Sidebar = () => {
                   shape="circle"
                   placement="bottom-right"
                 >
-                  <Avatar size="sm" src={member.imgUrl} />
+                  <Avatar size="sm" src={channel.imgUrl} />
                 </Badge>
                 <span className="text-sm flex-1 max-w-[160px] overflow-hidden">
-                  <p className="text-start text-ellipsis">{member.name}</p>
+                  <p className="text-start text-ellipsis">{channel.name}</p>
                 </span>
               </Button>
             ))}
           </AccordionItem>
-          <AccordionItem title={'Recent'}>
-            {data?.data.map((member) => (
+          <AccordionItem key={'contacts'} title={'Contacts'}>
+            {contacts?.data.map((contact) => (
               <Button
-                key={member.id}
+                key={contact.id}
                 fullWidth
                 variant={'light'}
                 size="lg"
                 className="px-3 justify-start"
+                onClick={() =>
+                  navigate({
+                    to: '/chat/$channelId',
+                    params: {
+                      channelId: [contact.id, currentMember.id]
+                        .sort()
+                        .join('_'),
+                    },
+                  })
+                }
               >
                 <Badge
                   content=""
@@ -99,10 +121,10 @@ export const Sidebar = () => {
                   shape="circle"
                   placement="bottom-right"
                 >
-                  <Avatar size="sm" src={member.imgUrl} />
+                  <Avatar size="sm" src={contact.imgUrl} />
                 </Badge>
                 <span className="text-sm flex-1 max-w-[160px] overflow-hidden">
-                  <p className="text-start text-ellipsis">{member.name}</p>
+                  <p className="text-start text-ellipsis">{contact.name}</p>
                 </span>
               </Button>
             ))}

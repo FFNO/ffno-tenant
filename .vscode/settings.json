@@ -1,5 +1,5 @@
 {
   "i18n-ally.localesPaths": ["src/locales"],
   "i18n-ally.keystyle": "nested",
-  "cSpell.words": ["nextui"]
+  "cSpell.words": ["hugeicons", "nextui", "tanstack"]
 }
