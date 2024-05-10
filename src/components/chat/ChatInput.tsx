@@ -1,11 +1,6 @@
 import { socketService } from '@/services/socket';
 import { Button, Input } from '@nextui-org/react';
-import {
-  Image01Icon,
-  MailSend01Icon,
-  Mic01Icon,
-  SentIcon,
-} from 'hugeicons-react';
+import { Image01Icon, Mic01Icon, SentIcon } from 'hugeicons-react';
 import { useState } from 'react';
 
 interface Props {

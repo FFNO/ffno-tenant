@@ -1,11 +1,50 @@
-import { Input } from "@nextui-org/react";
-import { createFileRoute } from "@tanstack/react-router";
+import { axiosInstance } from '@/api/utils';
+import { memberAtom } from '@/app';
+import { Gender, ISignUpDto, MemberRole, genders } from '@/libs';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Input, Select, SelectItem } from '@nextui-org/react';
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
+import { HttpStatusCode } from 'axios';
+import { useSetAtom } from 'jotai';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-export const Route = createFileRoute("/auth/sign-up")({
+const signUpSchema = z.object({
+  role: z.coerce.number().default(MemberRole.TENANT),
+  name: z.string().min(1, 'This field must not be empty'),
+  email: z.string().email(),
+  password: z.string().min(6),
+  gender: z.nativeEnum(Gender, { message: 'Gender is required' }),
+  imgUrl: z.string().url().optional(),
+  address: z.string().optional(),
+  dateOfBirth: z.coerce.date().max(new Date()).optional(),
+  identityNumber: z
+    .string()
+    .length(12, 'Identity number must be exactly 12 digits')
+    .optional(),
+});
+
+export const Route = createFileRoute('/auth/sign-up')({
   component: Page,
 });
 
 function Page() {
+  const setMember = useSetAtom(memberAtom);
+
+  const navigate = useNavigate();
+  const form = useForm<ISignUpDto>({
+    resolver: zodResolver(signUpSchema),
+  });
+
+  const handleSignUp = async (values: ISignUpDto) => {
+    const { data, status } = await axiosInstance.post('auth/sign-up', values);
+    if (status === HttpStatusCode.Created) {
+      // OneSignal.User.addTag("memberId", data.id);
+      setMember(data);
+      navigate({ to: '/' });
+    }
+  };
+
   return (
     <section className="bg-white">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -18,8 +57,8 @@ function Page() {
         </aside>
 
         <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
-          <div className="max-w-xl lg:max-w-3xl">
-            <a className="block text-blue-600" href="#">
+          <div className="max-w-xl lg:max-w-md">
+            <Link to="/" className="block text-primary" href="#">
               <span className="sr-only">Home</span>
               <svg
                 className="h-8 sm:h-10"
@@ -32,10 +71,10 @@ function Page() {
                   fill="currentColor"
                 />
               </svg>
-            </a>
+            </Link>
 
             <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-              Welcome to Squid 🦑
+              Welcome to {import.meta.env.VITE_APP_TITLE}
             </h1>
 
             <p className="mt-4 leading-relaxed text-gray-500">
@@ -43,119 +82,65 @@ function Page() {
               nam dolorum aliquam, quibusdam aperiam voluptatum.
             </p>
 
-            <form action="#" className="mt-8 grid grid-cols-6 gap-6">
-              <div className="col-span-6 sm:col-span-3">
-                <Input label="Name" />
-              </div>
+            <form
+              onSubmit={form.handleSubmit(handleSignUp)}
+              className="mt-8 flex flex-col gap-6"
+            >
+              <Input
+                label="Name"
+                placeholder="Enter your full name"
+                isInvalid={!!form.formState.errors.name}
+                errorMessage={form.formState.errors.name?.message}
+                {...form.register('name')}
+              />
 
-              <div className="col-span-6 sm:col-span-3">
-                <label
-                  htmlFor="LastName"
-                  className="block text-sm font-medium text-gray-700"
+              <Input
+                label="Email"
+                placeholder="Enter your email"
+                type="email"
+                isInvalid={!!form.formState.errors.email}
+                errorMessage={form.formState.errors.email?.message}
+                {...form.register('email')}
+              />
+
+              <Select
+                label="Gender"
+                placeholder="Select gender"
+                isInvalid={!!form.formState.errors.gender}
+                errorMessage={form.formState.errors.gender?.message}
+                {...form.register('gender')}
+              >
+                {genders.map((gender) => (
+                  <SelectItem key={gender.value} value={gender.value}>
+                    {gender.label}
+                  </SelectItem>
+                ))}
+              </Select>
+
+              <Input
+                label="Password"
+                placeholder="Enter your password"
+                type={'password'}
+                {...form.register('password')}
+              />
+
+              <Button
+                type="submit"
+                color="primary"
+                className="uppercase font-bold"
+              >
+                Sign Up
+              </Button>
+
+              <p className="mt-4 text-sm text-gray-500 sm:mt-0 text-center">
+                Already have an account?&nbsp;
+                <Link
+                  to="/auth/sign-in"
+                  className="text-primary font-bold underline"
                 >
-                  Last Name
-                </label>
-
-                <input
-                  type="text"
-                  id="LastName"
-                  name="last_name"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div className="col-span-6">
-                <label
-                  htmlFor="Email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email{" "}
-                </label>
-
-                <input
-                  type="email"
-                  id="Email"
-                  name="email"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div className="col-span-6 sm:col-span-3">
-                <label
-                  htmlFor="Password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password{" "}
-                </label>
-
-                <input
-                  type="password"
-                  id="Password"
-                  name="password"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div className="col-span-6 sm:col-span-3">
-                <label
-                  htmlFor="PasswordConfirmation"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password Confirmation
-                </label>
-
-                <input
-                  type="password"
-                  id="PasswordConfirmation"
-                  name="password_confirmation"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div className="col-span-6">
-                <label htmlFor="MarketingAccept" className="flex gap-4">
-                  <input
-                    type="checkbox"
-                    id="MarketingAccept"
-                    name="marketing_accept"
-                    className="size-5 rounded-md border-gray-200 bg-white shadow-sm"
-                  />
-
-                  <span className="text-sm text-gray-700">
-                    I want to receive emails about events, product updates and
-                    company announcements.
-                  </span>
-                </label>
-              </div>
-
-              <div className="col-span-6">
-                <p className="text-sm text-gray-500">
-                  By creating an account, you agree to our
-                  <a href="#" className="text-gray-700 underline">
-                    {" "}
-                    terms and conditions{" "}
-                  </a>
-                  and
-                  <a href="#" className="text-gray-700 underline">
-                    privacy policy
-                  </a>
-                  .
-                </p>
-              </div>
-
-              <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
-                  Create an account
-                </button>
-
-                <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                  Already have an account?
-                  <a href="#" className="text-gray-700 underline">
-                    Log in
-                  </a>
-                  .
-                </p>
-              </div>
+                  Sign In Now
+                </Link>
+              </p>
             </form>
           </div>
         </main>

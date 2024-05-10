@@ -36,7 +36,19 @@ export const ChatSidebar = () => {
 
       tempContact[currentMember.id] = currentMember;
 
-      channels.data.forEach((channel) => (tempChannel[channel.id] = channel));
+      channels.data.forEach((channel) => {
+        if (channel.id.length === 73) {
+          const contactId = channel.id
+            .replace(currentMember.id, '')
+            .replace('_', '');
+          tempContact[contactId] = {
+            id: contactId,
+            name: channel.name,
+            imgUrl: channel.imgUrl,
+          } as IMemberResDto;
+        }
+        tempChannel[channel.id] = channel;
+      });
       contacts.data.forEach((contact) => (tempContact[contact.id] = contact));
 
       setContactRecord(tempContact);

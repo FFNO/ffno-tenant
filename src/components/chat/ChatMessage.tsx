@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 
 interface Props extends IMessageResDto {}
 
-export const Message = (props: Props) => {
+export const ChatMessage = (props: Props) => {
   const currentMember = useAtomValue(memberAtom);
   const contactRecord = useAtomValue(contactRecordAtom);
 

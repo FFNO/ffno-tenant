@@ -1,5 +1,5 @@
 import { memberAtom } from '@/app';
-import { ChatSidebar } from '@/components/chat/Sidebar';
+import { ChatSidebar } from '@/components/chat/ChatSidebar';
 import { socketService } from '@/services/socket';
 import { Outlet, createFileRoute } from '@tanstack/react-router';
 import { useAtomValue } from 'jotai';

@@ -1,7 +1,7 @@
 import { dataProvider } from '@/api';
 import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
 import { ChatInput } from '@/components/chat/ChatInput';
-import { Messages } from '@/components/chat/Messages';
+import { ChatMessages } from '@/components/chat/ChatMessages';
 import { IGetListMessageResDto } from '@/libs';
 import { Avatar, Button, ButtonGroup } from '@nextui-org/react';
 import { createFileRoute } from '@tanstack/react-router';
@@ -33,9 +33,6 @@ function Page() {
       .replace(currentMember.id, '')
       .replace('_', '');
 
-    console.log(memberId);
-    console.log(contactRecord);
-
     return contactRecord[memberId] ?? channelRecord[data.channelId] ?? null;
   }, [data.channelId, currentMember.id, contactRecord, channelRecord]);
 
@@ -59,7 +56,7 @@ function Page() {
       </div>
       <div className="h-full flex flex-col overflow-auto">
         {data.messages && (
-          <Messages channelId={data.channelId} items={data.messages} />
+          <ChatMessages channelId={data.channelId} items={data.messages} />
         )}
       </div>
       <ChatInput channelId={data.channelId} />
