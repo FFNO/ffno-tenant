@@ -13,7 +13,12 @@ import {
   Tooltip,
 } from '@nextui-org/react';
 import { useNavigate } from '@tanstack/react-router';
-import { InboxIcon, Message01Icon, Notification01Icon } from 'hugeicons-react';
+import {
+  InboxIcon,
+  Invoice01Icon,
+  Message01Icon,
+  Notification01Icon,
+} from 'hugeicons-react';
 import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
@@ -49,6 +54,15 @@ function AppNavbar() {
                 onClick={() => navigate({ to: '/chat' })}
               >
                 <Message01Icon />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Invoices">
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => navigate({ to: '/invoices' })}
+              >
+                <Invoice01Icon />
               </Button>
             </Tooltip>
             <Tooltip content="Requests">

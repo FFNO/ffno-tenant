@@ -1,6 +1,7 @@
 import { useList } from '@/api';
 import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
 import { IChannelDto, IMemberResDto } from '@/libs';
+import { cn } from '@/utils';
 import {
   Accordion,
   AccordionItem,
@@ -8,20 +9,23 @@ import {
   Badge,
   Button,
 } from '@nextui-org/react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { AddSquareIcon, FilterIcon } from 'hugeicons-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 
 export const ChatSidebar = () => {
   const navigate = useNavigate();
+  const router = useRouterState();
   const currentMember = useAtomValue(memberAtom);
+
   const { data: channels } = useList<IChannelDto>({
     resource: 'chat/channels',
   });
   const { data: contacts } = useList<IMemberResDto>({
     resource: 'members/contacts',
   });
+
   const [contactRecord, setContactRecord] = useAtom(contactRecordAtom);
   const [channelRecord, setChannelRecord] = useAtom(channelRecordAtom);
 
@@ -59,7 +63,12 @@ export const ChatSidebar = () => {
   }, [channels, contacts]);
 
   return (
-    <div className="w-80 h-full border-r overflow-scroll">
+    <div
+      className={cn(
+        'w-80 h-full border-r overflow-scroll',
+        router.location.pathname.length > 37 ? 'hidden' : 'w-full',
+      )}
+    >
       <div className="flex items-center px-4 py-3 border-b">
         <span className="text-xl font-bold">Chat</span>
         <span className="flex-1" />

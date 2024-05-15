@@ -15,6 +15,7 @@ import { Route as ChatImport } from './routes/chat'
 import { Route as IndexImport } from './routes/index'
 import { Route as RequestsIndexImport } from './routes/requests/index'
 import { Route as PropertiesIndexImport } from './routes/properties/index'
+import { Route as InvoicesIndexImport } from './routes/invoices/index'
 import { Route as ChatIndexImport } from './routes/chat/index'
 import { Route as UnitsIdImport } from './routes/units/$id'
 import { Route as RequestsIdImport } from './routes/requests/$id'
@@ -22,6 +23,7 @@ import { Route as PropertiesIdImport } from './routes/properties/$id'
 import { Route as ChatChannelIdImport } from './routes/chat/$channelId'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthSignInImport } from './routes/auth/sign-in'
+import { Route as InvoicesIdIndexImport } from './routes/invoices/$id/index'
 
 // Create/Update Routes
 
@@ -42,6 +44,11 @@ const RequestsIndexRoute = RequestsIndexImport.update({
 
 const PropertiesIndexRoute = PropertiesIndexImport.update({
   path: '/properties/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const InvoicesIndexRoute = InvoicesIndexImport.update({
+  path: '/invoices/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -77,6 +84,11 @@ const AuthSignUpRoute = AuthSignUpImport.update({
 
 const AuthSignInRoute = AuthSignInImport.update({
   path: '/auth/sign-in',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const InvoicesIdIndexRoute = InvoicesIdIndexImport.update({
+  path: '/invoices/$id/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -120,12 +132,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatIndexImport
       parentRoute: typeof ChatImport
     }
+    '/invoices/': {
+      preLoaderRoute: typeof InvoicesIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/properties/': {
       preLoaderRoute: typeof PropertiesIndexImport
       parentRoute: typeof rootRoute
     }
     '/requests/': {
       preLoaderRoute: typeof RequestsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/invoices/$id/': {
+      preLoaderRoute: typeof InvoicesIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -141,8 +161,10 @@ export const routeTree = rootRoute.addChildren([
   PropertiesIdRoute,
   RequestsIdRoute,
   UnitsIdRoute,
+  InvoicesIndexRoute,
   PropertiesIndexRoute,
   RequestsIndexRoute,
+  InvoicesIdIndexRoute,
 ])
 
 /* prettier-ignore-end */

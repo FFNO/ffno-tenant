@@ -4,8 +4,13 @@ import { ChatInput } from '@/components/chat/ChatInput';
 import { ChatMessages } from '@/components/chat/ChatMessages';
 import { IGetListMessageResDto } from '@/libs';
 import { Avatar, Button, ButtonGroup } from '@nextui-org/react';
-import { createFileRoute } from '@tanstack/react-router';
-import { AiPhone01Icon, UserIcon, Video01Icon } from 'hugeicons-react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import {
+  AiPhone01Icon,
+  ArrowLeft01Icon,
+  UserIcon,
+  Video01Icon,
+} from 'hugeicons-react';
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
@@ -20,6 +25,7 @@ export const Route = createFileRoute('/chat/$channelId')({
 
 function Page() {
   const data = Route.useLoaderData();
+  const navigate = useNavigate();
   const currentMember = useAtomValue(memberAtom);
   const contactRecord = useAtomValue(contactRecordAtom);
   const channelRecord = useAtomValue(channelRecordAtom);
@@ -39,6 +45,13 @@ function Page() {
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center gap-2 px-4 py-2 border-b">
+        <Button
+          isIconOnly
+          variant="light"
+          onPress={() => navigate({ to: '/chat' })}
+        >
+          <ArrowLeft01Icon />
+        </Button>
         <Avatar src={member?.imgUrl} />
         <p className="font-bold text-lg">{member?.name}</p>
         <span className="flex-1" />
