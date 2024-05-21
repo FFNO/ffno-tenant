@@ -1,5 +1,5 @@
 import { useList } from '@/api';
-import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
+import { channelRecordAtom, contactRecordAtom, currentMemberAtom } from '@/app';
 import { IChannelDto, IMemberResDto } from '@/libs';
 import { cn } from '@/utils';
 import {
@@ -17,7 +17,7 @@ import { useEffect } from 'react';
 export const ChatSidebar = () => {
   const navigate = useNavigate();
   const router = useRouterState();
-  const currentMember = useAtomValue(memberAtom);
+  const currentMember = useAtomValue(currentMemberAtom);
 
   const { data: channels } = useList<IChannelDto>({
     resource: 'chat/channels',
@@ -65,8 +65,10 @@ export const ChatSidebar = () => {
   return (
     <div
       className={cn(
-        'w-80 h-full border-r overflow-scroll',
-        router.location.pathname.length > 37 ? 'hidden' : 'w-full',
+        'h-full border-r overflow-scroll',
+        router.location.pathname.length > 37
+          ? 'hidden md:w-80'
+          : 'w-full md:w-80',
       )}
     >
       <div className="flex items-center px-4 py-3 border-b">
@@ -94,12 +96,7 @@ export const ChatSidebar = () => {
                 size="lg"
                 className="px-3 justify-start"
                 onClick={() =>
-                  navigate({
-                    to: '/chat/$channelId',
-                    params: {
-                      channelId: channel.id,
-                    },
-                  })
+                  navigate({ to: '/chat/$id', params: { id: channel.id } })
                 }
               >
                 <Badge
@@ -126,11 +123,9 @@ export const ChatSidebar = () => {
                 className="px-3 justify-start"
                 onClick={() =>
                   navigate({
-                    to: '/chat/$channelId',
+                    to: '/chat/$id',
                     params: {
-                      channelId: [contact.id, currentMember.id]
-                        .sort()
-                        .join('_'),
+                      id: [contact.id, currentMember.id].sort().join('_'),
                     },
                   })
                 }

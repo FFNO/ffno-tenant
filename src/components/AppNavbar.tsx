@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/utils';
-import { memberAtom } from '@/app';
+import { currentMemberAtom } from '@/app';
 import { IMemberResDto } from '@/libs';
 import {
   Avatar,
@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 function AppNavbar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [member, setMember] = useAtom(memberAtom);
+  const [member, setMember] = useAtom(currentMemberAtom);
 
   const handleSignOut = async () => {
     setMember({} as IMemberResDto);

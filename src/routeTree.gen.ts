@@ -20,7 +20,7 @@ import { Route as ChatIndexImport } from './routes/chat/index'
 import { Route as UnitsIdImport } from './routes/units/$id'
 import { Route as RequestsIdImport } from './routes/requests/$id'
 import { Route as PropertiesIdImport } from './routes/properties/$id'
-import { Route as ChatChannelIdImport } from './routes/chat/$channelId'
+import { Route as ChatIdImport } from './routes/chat/$id'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthSignInImport } from './routes/auth/sign-in'
 import { Route as InvoicesIdIndexImport } from './routes/invoices/$id/index'
@@ -72,8 +72,8 @@ const PropertiesIdRoute = PropertiesIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ChatChannelIdRoute = ChatChannelIdImport.update({
-  path: '/$channelId',
+const ChatIdRoute = ChatIdImport.update({
+  path: '/$id',
   getParentRoute: () => ChatRoute,
 } as any)
 
@@ -112,8 +112,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignUpImport
       parentRoute: typeof rootRoute
     }
-    '/chat/$channelId': {
-      preLoaderRoute: typeof ChatChannelIdImport
+    '/chat/$id': {
+      preLoaderRoute: typeof ChatIdImport
       parentRoute: typeof ChatImport
     }
     '/properties/$id': {
@@ -155,7 +155,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  ChatRoute.addChildren([ChatChannelIdRoute, ChatIndexRoute]),
+  ChatRoute.addChildren([ChatIdRoute, ChatIndexRoute]),
   AuthSignInRoute,
   AuthSignUpRoute,
   PropertiesIdRoute,

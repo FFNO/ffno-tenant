@@ -1,5 +1,5 @@
 import { dataProvider } from '@/api';
-import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
+import { channelRecordAtom, contactRecordAtom, currentMemberAtom } from '@/app';
 import { ChatInput } from '@/components/chat/ChatInput';
 import { ChatMessages } from '@/components/chat/ChatMessages';
 import { IGetListMessageResDto } from '@/libs';
@@ -14,19 +14,19 @@ import {
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
-export const Route = createFileRoute('/chat/$channelId')({
+export const Route = createFileRoute('/chat/$id')({
   component: Page,
-  loader: ({ params: { channelId } }) =>
+  loader: ({ params: { id } }) =>
     dataProvider.getOne<IGetListMessageResDto>({
+      id,
       resource: 'chat/channels',
-      id: channelId,
     }),
 });
 
 function Page() {
   const data = Route.useLoaderData();
   const navigate = useNavigate();
-  const currentMember = useAtomValue(memberAtom);
+  const currentMember = useAtomValue(currentMemberAtom);
   const contactRecord = useAtomValue(contactRecordAtom);
   const channelRecord = useAtomValue(channelRecordAtom);
 

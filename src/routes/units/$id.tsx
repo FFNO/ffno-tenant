@@ -1,5 +1,5 @@
 import { dataProvider, useCreate } from '@/api';
-import { memberAtom } from '@/app';
+import { currentMemberAtom } from '@/app';
 import {
   Carousel,
   CarouselContent,
@@ -35,7 +35,7 @@ function Page() {
   const data = Route.useLoaderData();
   const router = useRouter();
 
-  const member = useAtomValue(memberAtom);
+  const member = useAtomValue(currentMemberAtom);
   const mutateRequest = useCreate({
     resource: 'requests',
     onSuccess() {

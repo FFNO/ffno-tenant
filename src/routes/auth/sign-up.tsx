@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/utils';
-import { memberAtom } from '@/app';
+import { currentMemberAtom } from '@/app';
 import { Gender, ISignUpDto, MemberRole, genders } from '@/libs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Select, SelectItem } from '@nextui-org/react';
@@ -7,10 +7,11 @@ import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { HttpStatusCode } from 'axios';
 import { useSetAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
+import OneSignal from 'react-onesignal';
 import { z } from 'zod';
 
 const signUpSchema = z.object({
-  role: z.coerce.number().default(MemberRole.TENANT),
+  role: z.coerce.string().default(MemberRole.TENANT),
   name: z.string().min(1, 'This field must not be empty'),
   email: z.string().email(),
   password: z.string().min(6),
@@ -29,7 +30,7 @@ export const Route = createFileRoute('/auth/sign-up')({
 });
 
 function Page() {
-  const setMember = useSetAtom(memberAtom);
+  const setMember = useSetAtom(currentMemberAtom);
 
   const navigate = useNavigate();
   const form = useForm<ISignUpDto>({
@@ -39,7 +40,7 @@ function Page() {
   const handleSignUp = async (values: ISignUpDto) => {
     const { data, status } = await axiosInstance.post('auth/sign-up', values);
     if (status === HttpStatusCode.Created) {
-      // OneSignal.User.addTag("memberId", data.id);
+      OneSignal.User.addTag('memberId', data.id);
       setMember(data);
       navigate({ to: '/' });
     }

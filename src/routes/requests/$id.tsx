@@ -1,5 +1,5 @@
 import { dataProvider, useUpdate } from '@/api';
-import { memberAtom } from '@/app';
+import { currentMemberAtom } from '@/app';
 import {
   IRequestResDto,
   RequestStatus,
@@ -21,7 +21,7 @@ export const Route = createFileRoute('/requests/$id')({
 function Page() {
   const router = useRouter();
   const data = Route.useLoaderData();
-  const currentMember = useAtomValue(memberAtom);
+  const currentMember = useAtomValue(currentMemberAtom);
 
   const mutate = useUpdate({
     resource: `requests/${data.id}`,
