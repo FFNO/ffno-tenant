@@ -32,9 +32,9 @@ function Page() {
   });
 
   return (
-    <div className="flex flex-col px-32 py-10">
+    <div className="flex flex-col px-32 py-10 gap-4">
       <div className="flex flex-row justify-between">
-        <h3>Contracts</h3>
+        <h3 className="text-lg font-semibold">Contracts</h3>
         <span className="flex-1"></span>
       </div>
       <Table
@@ -70,7 +70,7 @@ function Page() {
             <TableRow key={contract.id}>
               <TableCell>#{contract.id}</TableCell>
               <TableCell>
-                <div className="inline-flex">
+                <div className="inline-flex items-center gap-4">
                   <Avatar size={'sm'} src={contract.tenant.imgUrl} />
                   <p>{contract.tenant.name}</p>
                 </div>
@@ -88,13 +88,13 @@ function Page() {
                 <Chip>{contractStatusRecord[contract.status]}</Chip>
               </TableCell>
               <TableCell>
-                <div className="inline-flex justify-center">
+                <div className="inline-flex justify-center gap-4">
                   <Link
                     to="/contracts/$id"
                     params={{ id: contract.id.toString() }}
                   >
                     <Tooltip content={'View contract detail'}>
-                      <Button isIconOnly variant="light">
+                      <Button isIconOnly variant="flat" color="warning">
                         <ViewIcon size={16} />
                       </Button>
                     </Tooltip>
@@ -104,7 +104,7 @@ function Page() {
                     params={{ id: contract.unit.propertyId }}
                   >
                     <Tooltip content={'View property detail'}>
-                      <Button isIconOnly variant="light" color="secondary">
+                      <Button isIconOnly variant="flat" color="primary">
                         <PencilEdit02Icon size={16} />
                       </Button>
                     </Tooltip>

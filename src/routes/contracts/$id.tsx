@@ -7,13 +7,18 @@ import {
   IMemberResDto,
   RequestCategory,
   RequestStatus,
-  contractStatusColorRecord,
   contractStatusRecord,
-  requestStatusColorRecord,
   requestStatusRecord,
 } from '@/libs';
 import { vndFormatter } from '@/libs/helpers';
-import { Button, Chip } from '@nextui-org/react';
+import {
+  Avatar,
+  BreadcrumbItem,
+  Breadcrumbs,
+  Button,
+  Card,
+  Chip,
+} from '@nextui-org/react';
 import {
   Link,
   createFileRoute,
@@ -41,7 +46,7 @@ function Page() {
     status,
     startDate,
     endDate,
-    imgUrls,
+    // imgUrls,
     terminationDate,
     landlord,
     landlordStatus,
@@ -80,15 +85,26 @@ function Page() {
   };
 
   return (
-    <Paper px={120} py={'lg'}>
-      <Stack gap={'md'}>
-        <Group>
-          <Title order={3}>Unit lease contract</Title>
-          <Group gap={4}>
-            <Badge color={contractStatusColorRecord[status]}>
-              {contractStatusRecord[status]}
-            </Badge>
-          </Group>
+    <div className="px-40 py-10">
+      <div className="flex flex-col gap-4">
+        <Breadcrumbs>
+          <BreadcrumbItem>
+            <Link to="/">Home</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/contracts">Contracts</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/contracts/$id" params={{ id: id.toString() }}>
+              #{id}
+            </Link>
+          </BreadcrumbItem>
+        </Breadcrumbs>
+        <div className="inline-flex items-center gap-4">
+          <h3 className="text-lg font-semibold">Unit lease contract</h3>
+          <div className="inline-flex items-center gap-2">
+            <Chip>{contractStatusRecord[status]}</Chip>
+          </div>
           <span className="flex-1" />
           {status === ContractStatus.ACTIVE && (
             <Button
@@ -99,62 +115,52 @@ function Page() {
               Terminate contract
             </Button>
           )}
-        </Group>
-        <Fieldset legend={'Information'}>
-          <Stack>
-            <Group justify="space-between">
-              <Group>
-                <p className="font-semibold">Start date:</p>
-                <p>{dayjs(startDate).format(DATE_FORMAT)}</p>
-              </Group>
-              <Group>
-                <p className="font-semibold">End date:</p>
-                <p>{dayjs(endDate).format(DATE_FORMAT)}</p>
-              </Group>
-              <Group>
-                <p className="font-semibold">Termination date:</p>
-                <p>
-                  {terminationDate
-                    ? dayjs(terminationDate).format(DATE_FORMAT)
-                    : '-'}
-                </p>
-              </Group>
-            </Group>
-            <Group justify="space-between">
-              <Group>
-                <p>Price:</p>
-                <p>{vndFormatter.format(price)}/month</p>
-              </Group>
-              <Group>
-                <p>Deposit:</p>
-                <p>{vndFormatter.format(deposit)}/month</p>
-              </Group>
-            </Group>
-            <Group>
-              <Group>
-                <p>Unit: </p>
-                <p>
-                  {unit.name} - {unit.property.name}
-                </p>
-                <Link to="/units/$id" params={{ id: unit.id }}>
-                  <ActionIcon variant="subtle">
-                    <Link02Icon size={16} />
-                  </ActionIcon>
-                </Link>
-              </Group>
-            </Group>
-          </Stack>
-        </Fieldset>
-        <SimpleGrid cols={2}>
-          <Fieldset legend={'Landlord'}>
-            <MemberCard {...landlord} status={landlordStatus} />
-          </Fieldset>
-          <Fieldset legend={'Tenant'}>
-            <MemberCard {...tenant} status={tenantStatus} />
-          </Fieldset>
-        </SimpleGrid>
-        <Fieldset legend={'Images'}>
-          <Carousel
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="inline-flex items-center gap-2">
+            <p className="font-semibold">Start date:</p>
+            <p>{dayjs(startDate).format(DATE_FORMAT)}</p>
+          </div>
+          <div className="inline-flex items-center gap-2">
+            <p className="font-semibold">End date:</p>
+            <p>{dayjs(endDate).format(DATE_FORMAT)}</p>
+          </div>
+          <div className="inline-flex items-center gap-2">
+            <p className="font-semibold">Termination date:</p>
+            <p>
+              {terminationDate
+                ? dayjs(terminationDate).format(DATE_FORMAT)
+                : '-'}
+            </p>
+          </div>
+          <div className="inline-flex items-center gap-2">
+            <p className="font-semibold">Price:</p>
+            <p>{vndFormatter.format(price)}/month</p>
+          </div>
+          <div className="inline-flex items-center gap-2">
+            <p className="font-semibold">Deposit:</p>
+            <p>{vndFormatter.format(deposit)}/month</p>
+          </div>
+          <div>
+            <div className="inline-flex items-center gap-2">
+              <p className="font-semibold">Unit: </p>
+              <p>
+                {unit.name} - {unit.property.name}
+              </p>
+              <Link to="/units/$id" params={{ id: unit.id }}>
+                <Button isIconOnly variant="light">
+                  <Link02Icon size={16} />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+        {/*  */}
+        <div className="grid grid-cols-2 gap-4">
+          <MemberCard {...landlord} status={landlordStatus} />
+          <MemberCard {...tenant} status={tenantStatus} />
+        </div>
+        {/* <Carousel
             slideSize="70%"
             height={200}
             slideGap="md"
@@ -167,33 +173,32 @@ function Page() {
                 <Image src={imgUrl} />
               </Carousel.Slide>
             ))}
-          </Carousel>
-        </Fieldset>
-      </Stack>
-    </Paper>
+          </Carousel> */}
+      </div>
+    </div>
   );
 
   function MemberCard(props: IMemberResDto & { status: RequestStatus }) {
     return (
-      <Stack>
-        <Card withBorder>
-          <Group>
+      <div>
+        <Card>
+          <div className="p-4 inline-flex items-center gap-2">
             <Avatar src={props.imgUrl} />
-            <Text>{props.name}</Text>
-            <Box flex={1} />
+            <div>{props.name}</div>
+            <div className="flex-1" />
             {props.id === currentMember.id &&
             props.status === RequestStatus.PENDING ? (
               <>
                 <Button
-                  color={'green'}
-                  leftSection={<Tick01Icon size={20} />}
+                  color={'success'}
+                  startContent={<Tick01Icon size={20} />}
                   onClick={() => confirmApprove()}
                 >
                   Approve
                 </Button>
                 <Button
                   color={'danger'}
-                  prefix={<Cancel01Icon size={20} />}
+                  startContent={<Cancel01Icon size={20} />}
                   onClick={() => rejectApprove()}
                 >
                   Reject
@@ -204,9 +209,9 @@ function Page() {
                 <Chip>{requestStatusRecord[props.status]}</Chip>
               </>
             )}
-          </Group>
+          </div>
         </Card>
-      </Stack>
+      </div>
     );
   }
 }
