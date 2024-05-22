@@ -16,6 +16,7 @@ import { useNavigate } from '@tanstack/react-router';
 import {
   InboxIcon,
   Invoice01Icon,
+  Invoice02Icon,
   Message01Icon,
   Notification01Icon,
 } from 'hugeicons-react';
@@ -63,6 +64,15 @@ function AppNavbar() {
                 onClick={() => navigate({ to: '/invoices' })}
               >
                 <Invoice01Icon />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Contracts">
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => navigate({ to: '/contracts' })}
+              >
+                <Invoice02Icon />
               </Button>
             </Tooltip>
             <Tooltip content="Requests">

@@ -50,7 +50,7 @@ function Page() {
     }
     mutateRequest.mutate({
       name: `Lease request`,
-      details: `Lease request for ${data.name} - ${data.property.name}`,
+      description: `Lease request for ${data.name} - ${data.property.name}`,
       unitId: data.id,
       propertyId: data.propertyId,
       category: RequestCategory.UNIT_LEASE,
@@ -113,7 +113,7 @@ function Page() {
         {/* Overview */}
         <div>
           <p className="text-3xl font-semibold mb-1">Overview</p>
-          <p>{data.details}</p>
+          <p>{data.description}</p>
         </div>
         {/* Amenities */}
         <div>

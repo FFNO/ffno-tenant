@@ -16,10 +16,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as RequestsIndexImport } from './routes/requests/index'
 import { Route as PropertiesIndexImport } from './routes/properties/index'
 import { Route as InvoicesIndexImport } from './routes/invoices/index'
+import { Route as ContractsIndexImport } from './routes/contracts/index'
 import { Route as ChatIndexImport } from './routes/chat/index'
 import { Route as UnitsIdImport } from './routes/units/$id'
 import { Route as RequestsIdImport } from './routes/requests/$id'
 import { Route as PropertiesIdImport } from './routes/properties/$id'
+import { Route as ContractsIdImport } from './routes/contracts/$id'
 import { Route as ChatIdImport } from './routes/chat/$id'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthSignInImport } from './routes/auth/sign-in'
@@ -52,6 +54,11 @@ const InvoicesIndexRoute = InvoicesIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ContractsIndexRoute = ContractsIndexImport.update({
+  path: '/contracts/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ChatIndexRoute = ChatIndexImport.update({
   path: '/',
   getParentRoute: () => ChatRoute,
@@ -69,6 +76,11 @@ const RequestsIdRoute = RequestsIdImport.update({
 
 const PropertiesIdRoute = PropertiesIdImport.update({
   path: '/properties/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ContractsIdRoute = ContractsIdImport.update({
+  path: '/contracts/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -116,6 +128,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatIdImport
       parentRoute: typeof ChatImport
     }
+    '/contracts/$id': {
+      preLoaderRoute: typeof ContractsIdImport
+      parentRoute: typeof rootRoute
+    }
     '/properties/$id': {
       preLoaderRoute: typeof PropertiesIdImport
       parentRoute: typeof rootRoute
@@ -131,6 +147,10 @@ declare module '@tanstack/react-router' {
     '/chat/': {
       preLoaderRoute: typeof ChatIndexImport
       parentRoute: typeof ChatImport
+    }
+    '/contracts/': {
+      preLoaderRoute: typeof ContractsIndexImport
+      parentRoute: typeof rootRoute
     }
     '/invoices/': {
       preLoaderRoute: typeof InvoicesIndexImport
@@ -158,9 +178,11 @@ export const routeTree = rootRoute.addChildren([
   ChatRoute.addChildren([ChatIdRoute, ChatIndexRoute]),
   AuthSignInRoute,
   AuthSignUpRoute,
+  ContractsIdRoute,
   PropertiesIdRoute,
   RequestsIdRoute,
   UnitsIdRoute,
+  ContractsIndexRoute,
   InvoicesIndexRoute,
   PropertiesIndexRoute,
   RequestsIndexRoute,

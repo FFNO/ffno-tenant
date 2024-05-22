@@ -36,7 +36,7 @@ function Page() {
           ))}
           {/* Overview */}
           <p className="text-xl font-semibold">Overview</p>
-          <p>{data.details}</p>
+          <p>{data.description}</p>
           {/* Amenities */}
           <p className="text-xl font-semibold">Amenities</p>
           <div className="flex flex-row flex-wrap gap-3">
@@ -85,7 +85,7 @@ function UnitCard(props: IUnitResDto) {
         <p className="text-2xl font-extrabold">
           {vndFormatter.format(+props.price)}/month
         </p>
-        <p className="text-sm text-default-500">{props.details}</p>
+        <p className="text-sm text-default-500">{props.description}</p>
         <p className="font-medium">{props.area} m2</p>
       </div>
       <div className="flex items-center">
@@ -97,7 +97,7 @@ function UnitCard(props: IUnitResDto) {
             navigate({ to: '/units/$id', params: { id: props.id } })
           }
         >
-          View details
+          View description
         </Button>
       </div>
     </div>
