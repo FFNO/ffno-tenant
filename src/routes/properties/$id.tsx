@@ -1,5 +1,6 @@
 import { dataProvider } from '@/api';
 import MemberCard from '@/components/MemberCard';
+import { Reviews } from '@/components/reviews/Reviews';
 import { IPropertyResDto, IUnitResDto, propertyTypeRecord } from '@/libs';
 import { vndFormatter } from '@/utils';
 import { Button, Chip, Image } from '@nextui-org/react';
@@ -46,10 +47,17 @@ function Page() {
               </Chip>
             ))}
           </div>
+
           {/* Contacts */}
           <p className="text-xl font-semibold">Contacts</p>
           <div className="flex flex-row flex-wrap gap-3">
             <MemberCard {...data.owner} />
+          </div>
+
+          {/* Contacts */}
+          <p className="text-xl font-semibold">Reviews</p>
+          <div className="flex flex-row w-full flex-wrap gap-3">
+            <Reviews />
           </div>
         </div>
         <div className="col-span-2">

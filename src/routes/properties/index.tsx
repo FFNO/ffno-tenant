@@ -75,7 +75,6 @@ function Page() {
       <div className="flex-1 grid grid-cols-3 gap-8">
         {data?.map((item) => <PropertyCard {...item} key={item.id} />)}
       </div>
-      {/* <Code>{JSON.stringify(data, null, 2)}</Code> */}
     </div>
   );
 }

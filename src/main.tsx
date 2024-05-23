@@ -2,6 +2,7 @@ import 'react-photo-view/dist/react-photo-view.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './i18n.ts';
 import './index.css';
+import '@smastrom/react-rating/style.css';
 
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
