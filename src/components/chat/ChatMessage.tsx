@@ -1,4 +1,4 @@
-import { contactRecordAtom, memberAtom } from '@/app';
+import { contactRecordAtom, currentMemberAtom } from '@/app';
 import { IMessageResDto } from '@/libs';
 import { cn } from '@/utils';
 import { Avatar, Tooltip } from '@nextui-org/react';
@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 interface Props extends IMessageResDto {}
 
 export const ChatMessage = (props: Props) => {
-  const currentMember = useAtomValue(memberAtom);
+  const currentMember = useAtomValue(currentMemberAtom);
   const contactRecord = useAtomValue(contactRecordAtom);
 
   const isMyself = useMemo(

@@ -1,11 +1,12 @@
-import { dataProvider } from "@/api";
+import { dataProvider } from '@/api';
 import {
+  IRequestResDto,
   RequestCategory,
-  RequestResDto,
   RequestStatus,
   requestCategoryRecord,
   requestStatusRecord,
-} from "@/libs";
+} from '@/libs';
+import { calculatePage } from '@/libs/helpers';
 import {
   Button,
   Pagination,
@@ -20,37 +21,42 @@ import {
   Tabs,
   User,
   getKeyValue,
-} from "@nextui-org/react";
-import { createFileRoute } from "@tanstack/react-router";
-import dayjs from "dayjs";
-import { z } from "zod";
+} from '@nextui-org/react';
+import { createFileRoute } from '@tanstack/react-router';
+import dayjs from 'dayjs';
+import { z } from 'zod';
 
 const searchSchema = z.object({
-  type: z.enum(["sent", "received"]).optional(),
+  page: z.coerce.number().default(1),
+  type: z.enum(['sent', 'received']).optional(),
 });
 
-export const Route = createFileRoute("/requests/")({
+export const Route = createFileRoute('/requests/')({
   component: Page,
   validateSearch: searchSchema.parse,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>
-    dataProvider.getList<RequestResDto>({ resource: "requests", params: deps }),
+    dataProvider.getList<IRequestResDto>({
+      resource: 'requests',
+      params: deps,
+    }),
 });
 
 function Page() {
   const navigate = Route.useNavigate();
   const search = Route.useSearch();
+
   const { data, total } = Route.useLoaderData();
 
   return (
     <div className="flex flex-col px-10 py-8 gap-4">
       <Tabs
         aria-label="Options"
-        selectedKey={search.type ?? "received"}
+        selectedKey={search.type ?? 'received'}
         onSelectionChange={(key) => navigate({ search: { type: key } })}
       >
-        <Tab key="received" title="Received"></Tab>
-        <Tab key="sent" title="Sent"></Tab>
+        <Tab key="received" title="Received requests"></Tab>
+        <Tab key="sent" title="Sent requests"></Tab>
       </Tabs>
       <Table
         bottomContent={
@@ -61,15 +67,15 @@ function Page() {
                 showControls
                 showShadow
                 color="primary"
-                page={1}
-                total={total}
-                // onChange={(page) => setPage(page)}
+                page={search.page}
+                total={calculatePage(total)}
+                onChange={(page) => navigate({ search: { page } })}
               />
             </div>
           ) : null
         }
       >
-        {search.type === "sent" ? (
+        {search.type === 'sent' ? (
           <TableHeader>
             <TableColumn key="name">Name</TableColumn>
             <TableColumn align="center" key="category">
@@ -106,51 +112,53 @@ function Page() {
         <TableBody
           items={data ?? []}
           loadingContent={<Spinner />}
-          emptyContent={"No rows to display."}
+          emptyContent={'No rows to display.'}
           // loadingState={loadingState}
         >
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
                 <TableCell>
-                  {columnKey === "sender" ? (
+                  {columnKey === 'sender' ? (
                     <User
                       name={item.sender.name}
                       avatarProps={{ src: item.sender.imgUrl }}
                     />
-                  ) : columnKey === "name" ? (
+                  ) : columnKey === 'name' ? (
                     <div className="flex flex-col w-fit">
                       <p className="font-bold">
                         {getKeyValue(item, columnKey)}
                       </p>
-                      <p className="text-sm">{getKeyValue(item, "details")}</p>
+                      <p className="text-sm">
+                        {getKeyValue(item, 'description')}
+                      </p>
                     </div>
-                  ) : columnKey === "category" ? (
+                  ) : columnKey === 'category' ? (
                     requestCategoryRecord[
                       getKeyValue(item, columnKey) as RequestCategory
                     ]
-                  ) : columnKey === "status" ? (
+                  ) : columnKey === 'status' ? (
                     requestStatusRecord[
                       getKeyValue(item, columnKey) as RequestStatus
                     ]
-                  ) : columnKey === "createdAt" ? (
+                  ) : columnKey === 'createdAt' ? (
                     <span>
                       <p className="text-center">
-                        {dayjs(getKeyValue(item, columnKey)).format("LTS")}
+                        {dayjs(getKeyValue(item, columnKey)).format('LTS')}
                       </p>
                       <p className="text-center">
                         {dayjs(getKeyValue(item, columnKey)).format(
-                          "DD/MM/YYYY"
+                          'DD/MM/YYYY',
                         )}
                       </p>
                     </span>
-                  ) : columnKey === "actions" ? (
+                  ) : columnKey === 'actions' ? (
                     <Button
                       fullWidth
                       color="primary"
                       onClick={() =>
                         navigate({
-                          to: "/requests/$id",
+                          to: '/requests/$id',
                           params: { id: item.id },
                         })
                       }

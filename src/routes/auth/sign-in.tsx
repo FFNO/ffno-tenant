@@ -1,24 +1,25 @@
-import { axiosInstance } from "@/api/utils";
-import { memberAtom } from "@/app";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@nextui-org/react";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { HttpStatusCode } from "axios";
-import { useSetAtom } from "jotai";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { axiosInstance } from '@/api/utils';
+import { currentMemberAtom } from '@/app';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Input } from '@nextui-org/react';
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
+import { HttpStatusCode } from 'axios';
+import { useSetAtom } from 'jotai';
+import { useForm } from 'react-hook-form';
+import OneSignal from 'react-onesignal';
+import { z } from 'zod';
 
 const signInSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
 
-export const Route = createFileRoute("/auth/sign-in")({
+export const Route = createFileRoute('/auth/sign-in')({
   component: Page,
 });
 
 function Page() {
-  const setMember = useSetAtom(memberAtom);
+  const setMember = useSetAtom(currentMemberAtom);
 
   const navigate = useNavigate();
   const form = useForm({
@@ -65,24 +66,24 @@ function Page() {
             <form
               onSubmit={form.handleSubmit(async (values) => {
                 const { data, status } = await axiosInstance.post(
-                  "auth/sign-in",
-                  values
+                  'auth/sign-in',
+                  values,
                 );
                 if (status === HttpStatusCode.Created) {
-                  // OneSignal.User.addTag("memberId", data.id);
+                  OneSignal.User.addTag('memberId', data.id);
                   setMember(data);
-                  navigate({ to: "/" });
+                  navigate({ to: '/' });
                 }
               })}
               className="mt-8 flex flex-col gap-6"
             >
-              <Input label="Email" {...form.register("email")} />
+              <Input label="Email" {...form.register('email')} />
 
               <Input
                 label="Password"
                 placeholder="Enter your password"
-                type={"password"}
-                {...form.register("password")}
+                type={'password'}
+                {...form.register('password')}
               />
 
               <Button

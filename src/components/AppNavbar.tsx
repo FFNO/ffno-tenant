@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/utils';
-import { memberAtom } from '@/app';
+import { currentMemberAtom } from '@/app';
 import { IMemberResDto } from '@/libs';
 import {
   Avatar,
@@ -13,14 +13,20 @@ import {
   Tooltip,
 } from '@nextui-org/react';
 import { useNavigate } from '@tanstack/react-router';
-import { InboxIcon, Message01Icon, Notification01Icon } from 'hugeicons-react';
+import {
+  InboxIcon,
+  Invoice01Icon,
+  Invoice02Icon,
+  Message01Icon,
+  Notification01Icon,
+} from 'hugeicons-react';
 import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
 function AppNavbar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [member, setMember] = useAtom(memberAtom);
+  const [member, setMember] = useAtom(currentMemberAtom);
 
   const handleSignOut = async () => {
     setMember({} as IMemberResDto);
@@ -49,6 +55,24 @@ function AppNavbar() {
                 onClick={() => navigate({ to: '/chat' })}
               >
                 <Message01Icon />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Invoices">
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => navigate({ to: '/invoices' })}
+              >
+                <Invoice01Icon />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Contracts">
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => navigate({ to: '/contracts' })}
+              >
+                <Invoice02Icon />
               </Button>
             </Tooltip>
             <Tooltip content="Requests">

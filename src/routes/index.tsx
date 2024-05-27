@@ -38,12 +38,16 @@ function LandingPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-16 bg-gradient-to-b from-primary-100 px-48 py-32">
+      <div className="flex flex-col gap-16 bg-gradient-to-b from-primary-100 px-8 py-10 md:px-48 md:py-32">
         {/* Section 1 */}
-        <div className="grid grid-cols-2">
+        <div className="grid md:grid-cols-2">
           <div className="flex flex-col gap-8">
-            <p className="text-6xl font-bold">{t('landing.section-1')}</p>
-            <p className="text-xl font-medium">{t('landing.section-2')}</p>
+            <p className="text-[40px] text-center md:text-start md:text-6xl font-bold">
+              {t('landing.section-1')}
+            </p>
+            <p className="text-lg text-center md:text-start md:text-xl font-medium">
+              {t('landing.section-2')}
+            </p>
             <div className="grid grid-cols-2 space-x-4">
               <div className="flex flex-col gap-6">
                 <div className="relative w-min">
@@ -59,7 +63,7 @@ function LandingPage() {
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <p className="text-primary text-2xl font-semibold">
+                  <p className="text-primary text-lg md:text-2xl font-semibold">
                     50k+ renters
                   </p>
                   <p className="text-base">believe in our service</p>
@@ -79,20 +83,20 @@ function LandingPage() {
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <p className="text-primary text-2xl font-semibold">
+                  <p className="text-primary text-lg md:text-2xl font-semibold">
                     10k+ properties
                   </p>
-                  <p className="text-base">and house ready for occupancy</p>
+                  <p className="text-base">ready for occupancy</p>
                 </div>
               </div>
             </div>
           </div>
-          <Image src={LandingImage} className="" />
+          <Image src={LandingImage} className="hidden md:block" />
         </div>
       </div>
       {/* Section 2 */}
-      <div className="px-48">
-        <div className="flex flex-row gap-16">
+      <div className="px-8 md:px-48">
+        <div className="flex flex-col md:flex-row gap-16">
           <div className="relative p-10 flex flex-col gap-6 max-w-[416px] min-h-[500px] border rounded-lg bg-primary-50">
             <p className="font-bold text-3xl">
               The new way to find your new home
@@ -108,7 +112,7 @@ function LandingPage() {
               <Image src={BuildingImage} className=" w-64 h-64" />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-16">
+          <div className="grid md:grid-cols-2 gap-x-6 gap-y-16">
             <SectionItem
               title="Property Insurance"
               subtitle="We offer our customer property protection of liability coverage and
@@ -138,12 +142,14 @@ function LandingPage() {
         </div>
       </div>
       {/* Section 3 */}
-      <div className="flex flex-col items-center px-48 py-32">
-        <p className="font-bold text-4xl mb-4">Based on your location</p>
-        <p className="font-medium text-base mb-16">
+      <div className="flex flex-col items-center px-8 py-10 md:px-48 md:py-32">
+        <p className="font-bold text-4xl mb-4 text-center md:text-start">
+          Based on your location
+        </p>
+        <p className="font-medium text-base mb-16 text-center md:text-start">
           Some of our picked properties near you location.
         </p>
-        <div className="grid grid-cols-3 mb-12 w-full">
+        <div className="grid md:grid-cols-3 mb-12 w-full">
           <Input
             startContent={<Search01Icon size={20} className="mx-1" />}
             placeholder="Search..."
@@ -158,7 +164,7 @@ function LandingPage() {
             }}
           />
         </div>
-        <div className="grid grid-cols-3 w-full mb-8 gap-8">
+        <div className="grid md:grid-cols-3 w-full mb-8 gap-8">
           {data?.map((item) => <PropertyCard {...item} key={item.id} />)}
         </div>
         <Button
@@ -170,7 +176,7 @@ function LandingPage() {
         </Button>
       </div>
       {/* Landlord contact */}
-      <div className="flex flex-col items-center gap-2 py-16 bg-foreground text-white">
+      <div className="flex flex-col items-center gap-2 py-16 px-8 bg-foreground text-white">
         <p className="text-2xl text-primary font-bold">No Spam Promise</p>
         <p className="text-4xl font-bold">Are you a landlord?</p>
         <p className="text-base text-default-400 font-medium">
@@ -196,8 +202,8 @@ function LandingPage() {
           }}
         />
         <span className="flex flex-row text-sm font-medium text-default-400">
-          Join <p className="text-white font-semibold">&nbsp;10,000+&nbsp;</p>{' '}
-          other landlords in our estatery community.
+          Join <p className="text-white font-semibold">&nbsp;10,000+&nbsp;</p>
+          other landlords in our community.
         </span>
       </div>
     </>
@@ -216,8 +222,8 @@ function SectionItem({
   SubIcon: React.ElementType;
 }) {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="relative w-min">
+    <div className="flex flex-row md:flex-col gap-6">
+      <div className="relative w-min h-fit">
         <Avatar
           isBordered
           showFallback

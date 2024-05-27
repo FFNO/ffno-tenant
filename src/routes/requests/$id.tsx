@@ -1,6 +1,7 @@
 import { dataProvider, useUpdate } from '@/api';
-import { memberAtom } from '@/app';
+import { currentMemberAtom } from '@/app';
 import {
+  DATE_FORMAT,
   IRequestResDto,
   RequestStatus,
   requestCategoryRecord,
@@ -21,23 +22,27 @@ export const Route = createFileRoute('/requests/$id')({
 function Page() {
   const router = useRouter();
   const data = Route.useLoaderData();
-  const currentMember = useAtomValue(memberAtom);
+  const currentMember = useAtomValue(currentMemberAtom);
 
   const mutate = useUpdate({
     resource: `requests/${data.id}`,
     onSuccess: () => router.invalidate(),
   });
 
-  const confirmApprove = () => {};
+  const confirmApprove = () => {
+    mutate.mutate({ status: RequestStatus.ACCEPTED });
+  };
 
-  const confirmReject = () => {};
+  const confirmReject = () => {
+    mutate.mutate({ status: RequestStatus.ACCEPTED });
+  };
 
   return (
     <div className="flex justify-center">
       <div className="max-w-screen-lg px-6 py-8 flex flex-col gap-4">
         <div className="inline-flex gap-2 text-2xl font-bold">
           <p className="uppercase">[{requestCategoryRecord[data.category]}]</p>
-          <p>{data.details}</p>
+          <p>{data.description}</p>
         </div>
         <div className="flex flex-row items-center gap-1">
           {renderStatus(data.status)}
@@ -63,20 +68,20 @@ function Page() {
                       startContent={<Tick01Icon size={20} />}
                       onClick={() => confirmApprove()}
                     >
-                      Đồng ý
+                      Approve
                     </Button>
                     <Button
                       color="danger"
                       startContent={<Cancel01Icon size={20} />}
                       onClick={() => confirmReject()}
                     >
-                      Từ chối
+                      Reject
                     </Button>
                   </>
                 ) : (
                   <>
                     {renderStatus(status)}
-                    {dayjs(updatedAt).format('HH:mm:ss DD/MM/YYYY')}
+                    {dayjs(updatedAt).format(DATE_FORMAT)}
                   </>
                 )}
               </div>

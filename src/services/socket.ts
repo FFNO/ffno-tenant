@@ -15,6 +15,10 @@ class SocketService {
     this.socket.disconnect();
   }
 
+  ping() {
+    this.socket.emit(CHAT_PATTERNS.PING);
+  }
+
   sendMessage(data: ISendMessageDto) {
     console.log('🚀 ~ SocketService ~ sendMessage ~ data:', data);
     this.socket.emit(CHAT_PATTERNS.SEND_MESSAGE, data);

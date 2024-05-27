@@ -1,4 +1,4 @@
-import { contactRecordAtom, memberAtom } from '@/app';
+import { contactRecordAtom, currentMemberAtom } from '@/app';
 import { IMemberResDto, memberRoleRecord } from '@/libs';
 import {
   Avatar,
@@ -16,7 +16,7 @@ interface Props extends IMemberResDto {}
 
 function MemberCard(props: Props) {
   const navigate = useNavigate();
-  const currentMember = useAtomValue(memberAtom);
+  const currentMember = useAtomValue(currentMemberAtom);
   const setContactRecord = useSetAtom(contactRecordAtom);
 
   return (

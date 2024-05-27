@@ -1,6 +1,7 @@
 import { useList } from '@/api';
-import { channelRecordAtom, contactRecordAtom, memberAtom } from '@/app';
+import { channelRecordAtom, contactRecordAtom, currentMemberAtom } from '@/app';
 import { IChannelDto, IMemberResDto } from '@/libs';
+import { cn } from '@/utils';
 import {
   Accordion,
   AccordionItem,
@@ -8,20 +9,23 @@ import {
   Badge,
   Button,
 } from '@nextui-org/react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { AddSquareIcon, FilterIcon } from 'hugeicons-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 
 export const ChatSidebar = () => {
   const navigate = useNavigate();
-  const currentMember = useAtomValue(memberAtom);
+  const router = useRouterState();
+  const currentMember = useAtomValue(currentMemberAtom);
+
   const { data: channels } = useList<IChannelDto>({
     resource: 'chat/channels',
   });
   const { data: contacts } = useList<IMemberResDto>({
     resource: 'members/contacts',
   });
+
   const [contactRecord, setContactRecord] = useAtom(contactRecordAtom);
   const [channelRecord, setChannelRecord] = useAtom(channelRecordAtom);
 
@@ -59,7 +63,14 @@ export const ChatSidebar = () => {
   }, [channels, contacts]);
 
   return (
-    <div className="w-80 h-full border-r overflow-scroll">
+    <div
+      className={cn(
+        'h-full border-r overflow-scroll',
+        router.location.pathname.length > 37
+          ? 'hidden md:w-80'
+          : 'w-full md:w-80',
+      )}
+    >
       <div className="flex items-center px-4 py-3 border-b">
         <span className="text-xl font-bold">Chat</span>
         <span className="flex-1" />
@@ -85,12 +96,7 @@ export const ChatSidebar = () => {
                 size="lg"
                 className="px-3 justify-start"
                 onClick={() =>
-                  navigate({
-                    to: '/chat/$channelId',
-                    params: {
-                      channelId: channel.id,
-                    },
-                  })
+                  navigate({ to: '/chat/$id', params: { id: channel.id } })
                 }
               >
                 <Badge
@@ -117,11 +123,9 @@ export const ChatSidebar = () => {
                 className="px-3 justify-start"
                 onClick={() =>
                   navigate({
-                    to: '/chat/$channelId',
+                    to: '/chat/$id',
                     params: {
-                      channelId: [contact.id, currentMember.id]
-                        .sort()
-                        .join('_'),
+                      id: [contact.id, currentMember.id].sort().join('_'),
                     },
                   })
                 }
