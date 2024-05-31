@@ -7,9 +7,26 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { IUnitResDto, RequestCategory } from '@/libs';
+import {
+  IEquipmentResDto,
+  IUnitResDto,
+  RequestCategory,
+  unitStatusRecord,
+} from '@/libs';
+import { calculatePage, formatDate } from '@/libs/helpers';
 import { vndFormatter } from '@/utils';
-import { Button, Chip, Image } from '@nextui-org/react';
+import {
+  Button,
+  Chip,
+  Image,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from '@nextui-org/react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { useAtomValue } from 'jotai';
 import { toast } from 'react-toastify';
@@ -57,6 +74,15 @@ function Page() {
     });
   };
 
+  const handleReportEquipment = (data: IEquipmentResDto) => {
+    mutateRequest.mutate({
+      name: `Report equipment issue`,
+      description: `Issue with equipment ${data.name} -> Unit ${data.unit.name} - property ${data.property.name}`,
+      equipmentId: data.id,
+      category: RequestCategory.REPORT_ISSUE,
+    });
+  };
+
   return (
     <div className="flex justify-center">
       <div className="flex flex-col gap-8 max-w-screen-lg px-6 py-12">
@@ -76,14 +102,16 @@ function Page() {
                 {renderRentalStatus(data)}
               </Chip>
             </span>
-            <Button
-              color="primary"
-              className="uppercase font-bold"
-              onClick={() => handleRequest()}
-              isDisabled={data.requested}
-            >
-              {data.requested ? 'Request sent' : 'Request to apply'}
-            </Button>
+            {!data.selfOccupied && (
+              <Button
+                color="primary"
+                className="uppercase font-bold"
+                onClick={() => handleRequest()}
+                isDisabled={data.requested}
+              >
+                {data.requested ? 'Request sent' : 'Request to apply'}
+              </Button>
+            )}
           </div>
           {/* Brief */}
           <p className="text-lg">
@@ -125,6 +153,75 @@ function Page() {
               </Chip>
             ))}
           </div>
+        </div>
+        {/* Equipments */}
+        <div>
+          <p className="text-3xl font-semibold mb-1">Equipments</p>
+
+          <Table
+            bottomContent={
+              data.equipments.length ? (
+                <div className="flex w-full justify-center">
+                  <Pagination
+                    isCompact
+                    showControls
+                    showShadow
+                    color="primary"
+                    // page={search.page ?? 1}
+                    total={calculatePage(data.equipments.length)}
+                    // onChange={(page) => setSearch({ page })}
+                  />
+                </div>
+              ) : null
+            }
+          >
+            <TableHeader>
+              <TableColumn>Name</TableColumn>
+              <TableColumn>Brand</TableColumn>
+              <TableColumn>Model</TableColumn>
+              <TableColumn>Serial</TableColumn>
+              <TableColumn>Install at</TableColumn>
+              <TableColumn>Description</TableColumn>
+              <TableColumn>Property</TableColumn>
+              <TableColumn>Unit</TableColumn>
+              <TableColumn>Price</TableColumn>
+              <TableColumn align={'center'}>Status</TableColumn>
+              <TableColumn align={'center'}>Actions</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {(data.equipments ?? []).map((equipment) => (
+                <TableRow key={equipment.id}>
+                  <TableCell>{equipment.name}</TableCell>
+                  <TableCell>{equipment.brand}</TableCell>
+                  <TableCell>{equipment.model}</TableCell>
+                  <TableCell>{equipment.serial}</TableCell>
+                  <TableCell>
+                    {equipment.dateOfInstallation
+                      ? formatDate(equipment.dateOfInstallation)
+                      : '-'}
+                  </TableCell>
+                  <TableCell>{equipment.description}</TableCell>
+                  <TableCell>{equipment.unit.name}</TableCell>
+                  <TableCell>{equipment.property.name}</TableCell>
+                  <TableCell>{vndFormatter.format(equipment.price)}</TableCell>
+                  <TableCell align={'center'}>
+                    <Chip>{unitStatusRecord[equipment.maintainStatus]}</Chip>
+                  </TableCell>
+                  <TableCell>
+                    <div className="inline-flex justify-center gap-4">
+                      <Button
+                        variant="flat"
+                        color="primary"
+                        onClick={() => handleReportEquipment(equipment)}
+                      >
+                        Report issue
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
         {/* Images */}
         <div>
