@@ -15,12 +15,14 @@ import { Route as ChatImport } from './routes/chat'
 import { Route as IndexImport } from './routes/index'
 import { Route as RequestsIndexImport } from './routes/requests/index'
 import { Route as PropertiesIndexImport } from './routes/properties/index'
+import { Route as NotificationsIndexImport } from './routes/notifications/index'
 import { Route as InvoicesIndexImport } from './routes/invoices/index'
 import { Route as ContractsIndexImport } from './routes/contracts/index'
 import { Route as ChatIndexImport } from './routes/chat/index'
 import { Route as UnitsIdImport } from './routes/units/$id'
 import { Route as RequestsIdImport } from './routes/requests/$id'
 import { Route as PropertiesIdImport } from './routes/properties/$id'
+import { Route as EquipmentsIdImport } from './routes/equipments/$id'
 import { Route as ContractsIdImport } from './routes/contracts/$id'
 import { Route as ChatIdImport } from './routes/chat/$id'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
@@ -46,6 +48,11 @@ const RequestsIndexRoute = RequestsIndexImport.update({
 
 const PropertiesIndexRoute = PropertiesIndexImport.update({
   path: '/properties/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NotificationsIndexRoute = NotificationsIndexImport.update({
+  path: '/notifications/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -76,6 +83,11 @@ const RequestsIdRoute = RequestsIdImport.update({
 
 const PropertiesIdRoute = PropertiesIdImport.update({
   path: '/properties/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EquipmentsIdRoute = EquipmentsIdImport.update({
+  path: '/equipments/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -132,6 +144,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContractsIdImport
       parentRoute: typeof rootRoute
     }
+    '/equipments/$id': {
+      preLoaderRoute: typeof EquipmentsIdImport
+      parentRoute: typeof rootRoute
+    }
     '/properties/$id': {
       preLoaderRoute: typeof PropertiesIdImport
       parentRoute: typeof rootRoute
@@ -154,6 +170,10 @@ declare module '@tanstack/react-router' {
     }
     '/invoices/': {
       preLoaderRoute: typeof InvoicesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/notifications/': {
+      preLoaderRoute: typeof NotificationsIndexImport
       parentRoute: typeof rootRoute
     }
     '/properties/': {
@@ -179,11 +199,13 @@ export const routeTree = rootRoute.addChildren([
   AuthSignInRoute,
   AuthSignUpRoute,
   ContractsIdRoute,
+  EquipmentsIdRoute,
   PropertiesIdRoute,
   RequestsIdRoute,
   UnitsIdRoute,
   ContractsIndexRoute,
   InvoicesIndexRoute,
+  NotificationsIndexRoute,
   PropertiesIndexRoute,
   RequestsIndexRoute,
   InvoicesIdIndexRoute,

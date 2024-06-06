@@ -16,7 +16,7 @@ import {
   Tooltip,
 } from '@nextui-org/react';
 import { Link, createFileRoute } from '@tanstack/react-router';
-import { PencilEdit02Icon, ViewIcon } from 'hugeicons-react';
+import { MeetingRoomIcon, ViewIcon } from 'hugeicons-react';
 import { useAtom } from 'jotai';
 
 export const Route = createFileRoute('/contracts/')({
@@ -99,13 +99,10 @@ function Page() {
                       </Button>
                     </Tooltip>
                   </Link>
-                  <Link
-                    to="/properties/$id"
-                    params={{ id: contract.unit.propertyId }}
-                  >
-                    <Tooltip content={'View property detail'}>
+                  <Link to="/units/$id" params={{ id: contract.unitId }}>
+                    <Tooltip content={'View unit detail'}>
                       <Button isIconOnly variant="flat" color="primary">
-                        <PencilEdit02Icon size={16} />
+                        <MeetingRoomIcon size={16} />
                       </Button>
                     </Tooltip>
                   </Link>
