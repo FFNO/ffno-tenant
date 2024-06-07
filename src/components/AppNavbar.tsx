@@ -79,13 +79,17 @@ function AppNavbar() {
               <Button
                 isIconOnly
                 variant="light"
-                onClick={() => navigate({ to: '/requests' })}
+                onClick={() => navigate({ to: '/requests', search: {} })}
               >
                 <InboxIcon />
               </Button>
             </Tooltip>
             <Tooltip content="Notifications">
-              <Button isIconOnly variant="light">
+              <Button
+                isIconOnly
+                variant="light"
+                onClick={() => navigate({ to: '/notifications', search: {} })}
+              >
                 <Notification01Icon />
               </Button>
             </Tooltip>

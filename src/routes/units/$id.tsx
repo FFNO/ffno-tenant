@@ -12,22 +12,32 @@ import {
   IUnitResDto,
   RequestCategory,
   unitStatusRecord,
+  unitStatusRecord,
 } from '@/libs';
+import { displayDate } from '@/libs/helpers';
 import { calculatePage, formatDate } from '@/libs/helpers';
 import { vndFormatter } from '@/utils';
 import {
   Button,
   Chip,
   Image,
-  Pagination,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Table,
   TableBody,
   TableCell,
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
+  useDisclosure,
 } from '@nextui-org/react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { Alert01Icon } from 'hugeicons-react';
 import { useAtomValue } from 'jotai';
 import { toast } from 'react-toastify';
 
@@ -51,6 +61,7 @@ function renderRentalStatus(unit: IUnitResDto) {
 function Page() {
   const data = Route.useLoaderData();
   const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const member = useAtomValue(currentMemberAtom);
   const mutateRequest = useCreate({
@@ -102,7 +113,7 @@ function Page() {
                 {renderRentalStatus(data)}
               </Chip>
             </span>
-            {!data.selfOccupied && (
+            {!data.isLiving && (
               <Button
                 color="primary"
                 className="uppercase font-bold"
@@ -247,6 +258,85 @@ function Page() {
             <CarouselNext />
           </Carousel>
         </div>
+        {/* Equipment */}
+        {data.isLiving && (
+          <Table>
+            <TableHeader>
+              <TableColumn>Name</TableColumn>
+              <TableColumn>Brand</TableColumn>
+              <TableColumn>Model</TableColumn>
+              <TableColumn>Serial</TableColumn>
+              <TableColumn>Install at</TableColumn>
+              <TableColumn>Description</TableColumn>
+              <TableColumn>Price</TableColumn>
+              <TableColumn align={'center'}>Status</TableColumn>
+              <TableColumn align={'center'}>Actions</TableColumn>
+            </TableHeader>
+            <TableBody items={data.equipments ?? []}>
+              {(item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.brand}</TableCell>
+                  <TableCell>{item.model}</TableCell>
+                  <TableCell>{item.serial}</TableCell>
+                  <TableCell>{displayDate(item.dateOfInstallation)}</TableCell>
+                  <TableCell>{item.description}</TableCell>
+                  <TableCell>{vndFormatter.format(item.price)}</TableCell>
+                  <TableCell align={'center'}>
+                    {unitStatusRecord[item.maintainStatus]}
+                  </TableCell>
+                  <TableCell>
+                    {/* <Link to="/equipments/$id" params={{ id: item.id }}>
+                      <Tooltip content={'View equipment detail'}>
+                        <Button isIconOnly variant="light">
+                          <ViewIcon size={16} />
+                        </Button>
+                      </Tooltip>
+                    </Link> */}
+                    <Tooltip content="Report issue">
+                      <Button
+                        isIconOnly
+                        color="danger"
+                        variant="light"
+                        onPress={onOpen}
+                      >
+                        <Alert01Icon />
+                      </Button>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          placement="top-center"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Report issue
+                </ModalHeader>
+                <ModalBody>
+                  <Input
+                    autoFocus
+                    label="Description"
+                    placeholder="Describe the issue"
+                    variant="bordered"
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" onPress={onClose}>
+                    Submit
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       </div>
     </div>
   );
