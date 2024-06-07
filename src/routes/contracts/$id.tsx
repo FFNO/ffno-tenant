@@ -155,25 +155,10 @@ function Page() {
             </div>
           </div>
         </div>
-        {/*  */}
         <div className="grid grid-cols-2 gap-4">
           <MemberCard {...landlord} status={landlordStatus} />
           <MemberCard {...tenant} status={tenantStatus} />
         </div>
-        {/* <Carousel
-            slideSize="70%"
-            height={200}
-            slideGap="md"
-            loop
-            dragFree
-            withIndicators
-          >
-            {imgUrls.map((imgUrl) => (
-              <Carousel.Slide key={imgUrl}>
-                <Image src={imgUrl} />
-              </Carousel.Slide>
-            ))}
-          </Carousel> */}
       </div>
     </div>
   );

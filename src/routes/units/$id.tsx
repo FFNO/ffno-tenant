@@ -11,11 +11,10 @@ import {
   IEquipmentResDto,
   IUnitResDto,
   RequestCategory,
-  unitStatusRecord,
+  requestCategoryRecord,
   unitStatusRecord,
 } from '@/libs';
-import { displayDate } from '@/libs/helpers';
-import { calculatePage, formatDate } from '@/libs/helpers';
+import { calculatePage, displayDate, formatDate } from '@/libs/helpers';
 import { vndFormatter } from '@/utils';
 import {
   Button,
@@ -27,6 +26,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -39,6 +39,7 @@ import {
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { Alert01Icon } from 'hugeicons-react';
 import { useAtomValue } from 'jotai';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 export const Route = createFileRoute('/units/$id')({
@@ -61,12 +62,20 @@ function renderRentalStatus(unit: IUnitResDto) {
 function Page() {
   const data = Route.useLoaderData();
   const router = useRouter();
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [requestCategory, setRequestCategory] = useState<RequestCategory>(
+    RequestCategory.REPORT_ISSUE,
+  );
+  const [selectedEquipment, setSelectedEquipment] =
+    useState<IEquipmentResDto>();
+  const [description, setDescription] = useState<string>();
 
   const member = useAtomValue(currentMemberAtom);
   const mutateRequest = useCreate({
     resource: 'requests',
     onSuccess() {
+      setDescription('');
       toast.success('Send request successfully');
       router.invalidate();
     },
@@ -85,15 +94,6 @@ function Page() {
     });
   };
 
-  const handleReportEquipment = (data: IEquipmentResDto) => {
-    mutateRequest.mutate({
-      name: `Report equipment issue`,
-      description: `Issue with equipment ${data.name} -> Unit ${data.unit.name} - property ${data.property.name}`,
-      equipmentId: data.id,
-      category: RequestCategory.REPORT_ISSUE,
-    });
-  };
-
   return (
     <div className="flex justify-center">
       <div className="flex flex-col gap-8 max-w-screen-lg px-6 py-12">
@@ -101,9 +101,7 @@ function Page() {
         <div>
           <div className="flex flex-row justify-between mb-1">
             <span className="inline-flex items-center gap-2">
-              <p className="text-3xl font-bold">
-                {data.property.name} - {data.name}
-              </p>
+              <p className="text-3xl font-bold">{data.name}</p>
               <Chip
                 size="lg"
                 color={data.tenants.length ? 'warning' : 'success'}
@@ -113,7 +111,28 @@ function Page() {
                 {renderRentalStatus(data)}
               </Chip>
             </span>
-            {!data.isLiving && (
+            {data.isLiving ? (
+              <div className="inline-flex items-center gap-2">
+                <Button
+                  onPress={() => {
+                    setRequestCategory(RequestCategory.REQUEST_EQUIPMENT);
+                    setSelectedEquipment(undefined);
+                    onOpen();
+                  }}
+                >
+                  Request equipment
+                </Button>
+                <Button
+                  onPress={() => {
+                    setRequestCategory(RequestCategory.REPORT_ISSUE);
+                    setSelectedEquipment(undefined);
+                    onOpen();
+                  }}
+                >
+                  Report issue
+                </Button>
+              </div>
+            ) : (
               <Button
                 color="primary"
                 className="uppercase font-bold"
@@ -164,75 +183,6 @@ function Page() {
               </Chip>
             ))}
           </div>
-        </div>
-        {/* Equipments */}
-        <div>
-          <p className="text-3xl font-semibold mb-1">Equipments</p>
-
-          <Table
-            bottomContent={
-              data.equipments.length ? (
-                <div className="flex w-full justify-center">
-                  <Pagination
-                    isCompact
-                    showControls
-                    showShadow
-                    color="primary"
-                    // page={search.page ?? 1}
-                    total={calculatePage(data.equipments.length)}
-                    // onChange={(page) => setSearch({ page })}
-                  />
-                </div>
-              ) : null
-            }
-          >
-            <TableHeader>
-              <TableColumn>Name</TableColumn>
-              <TableColumn>Brand</TableColumn>
-              <TableColumn>Model</TableColumn>
-              <TableColumn>Serial</TableColumn>
-              <TableColumn>Install at</TableColumn>
-              <TableColumn>Description</TableColumn>
-              <TableColumn>Property</TableColumn>
-              <TableColumn>Unit</TableColumn>
-              <TableColumn>Price</TableColumn>
-              <TableColumn align={'center'}>Status</TableColumn>
-              <TableColumn align={'center'}>Actions</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {(data.equipments ?? []).map((equipment) => (
-                <TableRow key={equipment.id}>
-                  <TableCell>{equipment.name}</TableCell>
-                  <TableCell>{equipment.brand}</TableCell>
-                  <TableCell>{equipment.model}</TableCell>
-                  <TableCell>{equipment.serial}</TableCell>
-                  <TableCell>
-                    {equipment.dateOfInstallation
-                      ? formatDate(equipment.dateOfInstallation)
-                      : '-'}
-                  </TableCell>
-                  <TableCell>{equipment.description}</TableCell>
-                  <TableCell>{equipment.unit.name}</TableCell>
-                  <TableCell>{equipment.property.name}</TableCell>
-                  <TableCell>{vndFormatter.format(equipment.price)}</TableCell>
-                  <TableCell align={'center'}>
-                    <Chip>{unitStatusRecord[equipment.maintainStatus]}</Chip>
-                  </TableCell>
-                  <TableCell>
-                    <div className="inline-flex justify-center gap-4">
-                      <Button
-                        variant="flat"
-                        color="primary"
-                        onClick={() => handleReportEquipment(equipment)}
-                      >
-                        Report issue
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
         </div>
         {/* Images */}
         <div>
@@ -286,29 +236,29 @@ function Page() {
                     {unitStatusRecord[item.maintainStatus]}
                   </TableCell>
                   <TableCell>
-                    {/* <Link to="/equipments/$id" params={{ id: item.id }}>
-                      <Tooltip content={'View equipment detail'}>
-                        <Button isIconOnly variant="light">
-                          <ViewIcon size={16} />
+                    <div className="inline-flex items-center">
+                      <Tooltip content="Report issue">
+                        <Button
+                          isIconOnly
+                          color="danger"
+                          variant="light"
+                          onPress={() => {
+                            setRequestCategory(RequestCategory.REPORT_ISSUE);
+                            setSelectedEquipment(item);
+                            onOpen();
+                          }}
+                        >
+                          <Alert01Icon />
                         </Button>
                       </Tooltip>
-                    </Link> */}
-                    <Tooltip content="Report issue">
-                      <Button
-                        isIconOnly
-                        color="danger"
-                        variant="light"
-                        onPress={onOpen}
-                      >
-                        <Alert01Icon />
-                      </Button>
-                    </Tooltip>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         )}
+        {/* Report equipment issue form */}
         <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}
@@ -318,18 +268,35 @@ function Page() {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
-                  Report issue
+                  {requestCategoryRecord[requestCategory]}
                 </ModalHeader>
                 <ModalBody>
                   <Input
                     autoFocus
                     label="Description"
-                    placeholder="Describe the issue"
                     variant="bordered"
+                    value={description}
+                    onValueChange={setDescription}
                   />
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="primary" onPress={onClose}>
+                  <Button
+                    color="primary"
+                    onPress={() => {
+                      if (!member.id) {
+                        return;
+                      }
+                      mutateRequest.mutate({
+                        name: `Report equipment issue`,
+                        description,
+                        unitId: data.id,
+                        propertyId: data.propertyId,
+                        equipmentId: selectedEquipment?.id,
+                        category: requestCategory,
+                      });
+                      onClose();
+                    }}
+                  >
                     Submit
                   </Button>
                 </ModalFooter>
