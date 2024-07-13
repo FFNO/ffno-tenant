@@ -44,6 +44,8 @@ function Page() {
   const [ward, setWard] = useState<string>();
   const [minPrice, setMinPrice] = useState<number>();
   const [maxPrice, setMaxPrice] = useState<number>();
+  const [maxSlot, setMaxSlot] = useState<number>();
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
   const { data: amenities } = useSimpleList({ resource: 'amenities' });
   const { data: provinces } = useSimpleList({ resource: 'provinces' });
@@ -76,6 +78,8 @@ function Page() {
                   ward,
                   minPrice,
                   maxPrice,
+                  maxSlot,
+                  amenities: selectedAmenities,
                 },
               });
             }}
@@ -125,6 +129,21 @@ function Page() {
                 </SelectItem>
               ))}
             </Select>
+            <Select
+              selectionMode="multiple"
+              label="Amenities"
+              placeholder="Select amenities"
+              className="max-w-[288px]"
+              onChange={(e) => {
+                setSelectedAmenities(e.target.value.split(','));
+              }}
+            >
+              {(amenities ?? []).map((item) => (
+                <SelectItem key={item} value={item}>
+                  {item}
+                </SelectItem>
+              ))}
+            </Select>
             <Input
               label="Min price"
               type="number"
@@ -137,11 +156,22 @@ function Page() {
               value={maxPrice}
               onValueChange={(e) => setMaxPrice(e ? +e : undefined)}
             />
+            <Input
+              label="Max slot"
+              type="number"
+              value={maxSlot}
+              onValueChange={(e) => setMaxSlot(e ? +e : undefined)}
+            />
             <div className="inline-flex justify-between gap-2">
               <Button color="primary" type="submit" fullWidth>
                 Submit
               </Button>
-              <Button color="danger" variant="bordered" fullWidth>
+              <Button
+                color="danger"
+                variant="bordered"
+                fullWidth
+                onClick={() => navigate({ to: '/properties/', params: {} })}
+              >
                 Clear
               </Button>
             </div>

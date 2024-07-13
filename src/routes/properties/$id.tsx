@@ -1,10 +1,18 @@
 import { dataProvider } from '@/api';
 import MemberCard from '@/components/MemberCard';
 import { Reviews } from '@/components/reviews/Reviews';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { IPropertyResDto, IUnitResDto, propertyTypeRecord } from '@/libs';
 import { vndFormatter } from '@/utils';
 import { Button, Chip, Image } from '@nextui-org/react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { UserGroupIcon } from 'hugeicons-react';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 
 export const Route = createFileRoute('/properties/$id')({
@@ -18,8 +26,8 @@ function Page() {
 
   return (
     <PhotoProvider>
-      <div className="grid grid-cols-5 px-40 py-12">
-        <div className="col-span-3 flex flex-col px-16 gap-4">
+      <div className="flex flex-col px-40 py-12">
+        <div className="flex flex-col px-16 gap-4">
           {/* Brief */}
           <div className="flex flex-row justify-between">
             <p className="text-3xl font-bold">{data.name}</p>
@@ -54,23 +62,35 @@ function Page() {
             <MemberCard {...data.owner} />
           </div>
 
-          {/* Contacts */}
+          {/* Review */}
           <p className="text-xl font-semibold">Reviews</p>
           <div className="flex flex-row w-full flex-wrap gap-3">
-            <Reviews />
+            <Reviews rating={data.rating} reviews={data.reviews} />
           </div>
         </div>
-        <div className="col-span-2">
-          {data.imgUrls.map((img, index) => (
-            <PhotoView src={img} key={index}>
-              <Image
-                radius="none"
-                src={img}
-                width="100%"
-                className="cursor-pointer mb-2"
-              />
-            </PhotoView>
-          ))}
+        <div className="px-16 py-8 rounded-lg">
+          <p className="text-xl font-semibold">Images</p>
+          <Carousel
+            opts={{
+              loop: true,
+              dragFree: true,
+            }}
+            className="mt-4"
+          >
+            <CarouselContent>
+              {data.imgUrls.map((img, index) => (
+                <CarouselItem key={index} className="basis-auto">
+                  <Image
+                    radius="none"
+                    src={img}
+                    className="cursor-pointer h-96 mb-2"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </div>
     </PhotoProvider>
@@ -88,12 +108,18 @@ function UnitCard(props: IUnitResDto) {
           className="h-full object-cover w-48"
         />
       </PhotoView>
-      <div className="flex-1 flex flex-col justify-between ml-4">
-        <p className="text-lg font-bold">{props.name}</p>
+      <div className="flex-1 flex flex-col justify-between ml-4 overflow-hidden">
+        <div className="flex flex-row items-center justify-between">
+          <p className="text-lg font-bold">{props.name}</p>
+          <span className="inline-flex items-center gap-2">
+            <UserGroupIcon />
+            <p>{`${props.curSlot}/${props.maxSlot}`}</p>
+          </span>
+        </div>
         <p className="text-2xl font-extrabold">
           {vndFormatter.format(+props.price)}/month
         </p>
-        <p className="text-sm text-default-500">{props.description}</p>
+        <p className="text-sm text-default-500 truncate">{props.description}</p>
         <p className="font-medium">{props.area} m2</p>
       </div>
       <div className="flex items-center">

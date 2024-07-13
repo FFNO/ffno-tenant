@@ -14,7 +14,7 @@ import {
   requestCategoryRecord,
   unitStatusRecord,
 } from '@/libs';
-import { calculatePage, displayDate, formatDate } from '@/libs/helpers';
+import { displayDate } from '@/libs/helpers';
 import { vndFormatter } from '@/utils';
 import {
   Button,
@@ -26,7 +26,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Pagination,
   Table,
   TableBody,
   TableCell,
