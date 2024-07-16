@@ -1,6 +1,13 @@
 import { dataProvider, useCreate, useUpdate } from '@/api';
 import { currentMemberAtom } from '@/app';
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import {
   ContractStatus,
   DATE_FORMAT,
   IContractResDto,
@@ -18,6 +25,7 @@ import {
   Button,
   Card,
   Chip,
+  Image,
 } from '@nextui-org/react';
 import {
   Link,
@@ -28,6 +36,7 @@ import {
 import dayjs from 'dayjs';
 import { Cancel01Icon, Link02Icon, Tick01Icon } from 'hugeicons-react';
 import { useAtomValue } from 'jotai';
+import { toast } from 'react-toastify';
 
 export const Route = createFileRoute('/contracts/$id')({
   component: Page,
@@ -46,7 +55,7 @@ function Page() {
     status,
     startDate,
     endDate,
-    // imgUrls,
+    imgUrls,
     terminationDate,
     landlord,
     landlordStatus,
@@ -63,6 +72,7 @@ function Page() {
   const mutateRequest = useCreate({
     resource: `requests`,
     onSuccess: () => {
+      toast.success('Send request successfully');
       router.invalidate();
     },
   });
@@ -108,7 +118,7 @@ function Page() {
           <span className="flex-1" />
           {status === ContractStatus.ACTIVE && (
             <Button
-              disabled={!!requests.length}
+              isDisabled={!!requests.length}
               color="danger"
               onClick={() => terminateContract()}
             >
@@ -158,6 +168,30 @@ function Page() {
         <div className="grid grid-cols-2 gap-4">
           <MemberCard {...landlord} status={landlordStatus} />
           <MemberCard {...tenant} status={tenantStatus} />
+        </div>
+        <div className="px- py-8 rounded-lg">
+          <p className="text-xl font-semibold">Images</p>
+          <Carousel
+            opts={{
+              loop: true,
+              dragFree: true,
+            }}
+            className="mt-4"
+          >
+            <CarouselContent>
+              {imgUrls.map((img, index) => (
+                <CarouselItem key={index} className="basis-auto">
+                  <Image
+                    radius="none"
+                    src={img}
+                    className="cursor-pointer h-96 mb-2"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </div>
     </div>
